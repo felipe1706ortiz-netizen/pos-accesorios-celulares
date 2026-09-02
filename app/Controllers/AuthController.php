@@ -219,16 +219,20 @@ class AuthController extends Controller
             'token_expira'       => $tokenExpira
         ]);
 
-        // 7. Enviar correo de verificación con PHPMailer
+        // 7. Enviar correo de verificación con PHPMailer / Resend API
         $mailResult = MailService::sendVerificationEmail($email, $nombre, $token);
 
         $this->render('auth/verificar_email', [
-            'title'      => 'Verificación de Cuenta Enviada',
-            'status'     => 'pending',
-            'email'      => $email,
-            'nombre'     => $nombre,
-            'devLink'    => $mailResult['dev_link'] ?? null,
-            'message'    => 'Hemos enviado un enlace de activación a tu correo. Por favor verifícalo para ingresar.'
+            'title'       => $mailResult['success'] ? 'Verificación de Cuenta Enviada' : 'Activación de Cuenta',
+            'status'      => 'pending',
+            'email'       => $email,
+            'nombre'      => $nombre,
+            'mailSuccess' => $mailResult['success'],
+            'mailMessage' => $mailResult['message'],
+            'devLink'     => $mailResult['dev_link'] ?? null,
+            'message'     => $mailResult['success'] 
+                ? 'Hemos enviado un enlace de activación a tu correo. Por favor revisa tu bandeja de entrada o spam para activarla.'
+                : 'El servidor en la nube no pudo enviar el correo directamente por SMTP (bloqueo de puertos en proveedores cloud gratuitos). Puedes activar tu cuenta directamente con el botón que aparece abajo:'
         ], 'auth');
     }
 
@@ -315,12 +319,16 @@ class AuthController extends Controller
         $mailResult = MailService::sendVerificationEmail($user['email'], $user['nombre'], $token);
 
         $this->render('auth/verificar_email', [
-            'title'   => 'Correo Reenviado',
-            'status'  => 'pending',
-            'email'   => $user['email'],
-            'nombre'  => $user['nombre'],
-            'devLink' => $mailResult['dev_link'] ?? null,
-            'message' => 'Se ha enviado un nuevo enlace de activación a tu correo electrónico.'
+            'title'       => $mailResult['success'] ? 'Correo Reenviado' : 'Activación de Cuenta',
+            'status'      => 'pending',
+            'email'       => $user['email'],
+            'nombre'      => $user['nombre'],
+            'mailSuccess' => $mailResult['success'],
+            'mailMessage' => $mailResult['message'],
+            'devLink'     => $mailResult['dev_link'] ?? null,
+            'message'     => $mailResult['success'] 
+                ? 'Se ha enviado un nuevo enlace de activación a tu correo electrónico.'
+                : 'El servidor en la nube no pudo enviar el correo directamente por SMTP (bloqueo de puertos en proveedores cloud gratuitos). Puedes activar tu cuenta directamente con el botón que aparece abajo:'
         ], 'auth');
     }
 

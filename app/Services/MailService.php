@@ -6,10 +6,12 @@ use PHPMailer\PHPMailer\Exception;
 
 /**
  * ==============================================================================
- * SERVICIO TRANSACCIONAL DE CORREO ELECTRÓNICO (MAILSERVICE CON PHPMAILER)
+ * SERVICIO TRANSACCIONAL DE CORREO ELECTRÓNICO (MAILSERVICE)
  * ==============================================================================
- * Gestiona el envío de correos de verificación, restablecimiento y notificaciones
- * con plantillas HTML modernas y soporte para SMTP seguro (TLS/SSL).
+ * Soporta envío mediante:
+ * 1. Resend API (HTTPS Puerto 443 - 100% compatible con Render/Railway Free Tier)
+ * 2. PHPMailer (SMTP Puerto 587/465 para local o servidores con puertos abiertos)
+ * 3. Enlace directo de activación seguro en caso de bloqueo de puertos
  * ==============================================================================
  */
 class MailService
@@ -26,7 +28,51 @@ class MailService
     {
         $verificationUrl = APP_URL . '/verificar-email?token=' . urlencode($token);
         $appName = defined('APP_NAME') ? APP_NAME : 'POS Celulares & Accesorios';
+        $subject = '🔐 Activa tu cuenta en ' . $appName;
+        $htmlBody = self::buildVerificationTemplate($toName, $verificationUrl, $appName);
+        $altBody = "Hola {$toName},\n\nGracias por registrarte en {$appName}.\nPara activar tu cuenta, ingresa al siguiente enlace:\n{$verificationUrl}\n\nEste enlace expira en 24 horas.\n\nDesarrollado por Andres Felipe Ortiz Hurtatiz.";
 
+        // --------------------------------------------------------------------------
+        // MÉTODO 1: RESEND API (HTTPS Puerto 443 - Nunca bloqueado por Render/Cloud)
+        // --------------------------------------------------------------------------
+        $resendApiKey = getenv('RESEND_API_KEY') ?: (defined('RESEND_API_KEY') ? RESEND_API_KEY : '');
+        if (!empty($resendApiKey) && function_exists('curl_init')) {
+            $fromAddress = getenv('MAIL_FROM_ADDRESS') ?: 'onboarding@resend.dev';
+            $payload = [
+                'from'    => $appName . ' <' . $fromAddress . '>',
+                'to'      => [$toEmail],
+                'subject' => $subject,
+                'html'    => $htmlBody
+            ];
+
+            $ch = curl_init('https://api.resend.com/emails');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . trim($resendApiKey),
+                'Content-Type: application/json'
+            ]);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($httpCode >= 200 && $httpCode < 300) {
+                return [
+                    'success'  => true,
+                    'message'  => 'Correo de activación enviado exitosamente a ' . htmlspecialchars($toEmail) . ' vía Resend API.',
+                    'dev_link' => null
+                ];
+            } else {
+                error_log("Error Resend API (HTTP {$httpCode}): " . $response . " | " . $curlError);
+            }
+        }
+
+        // --------------------------------------------------------------------------
+        // MÉTODO 2: SMTP VÍA PHPMAILER (Puerto 587 o 465)
+        // --------------------------------------------------------------------------
         $smtpHost = getenv('SMTP_HOST') ?: (defined('SMTP_HOST') ? SMTP_HOST : '');
         $smtpUser = getenv('SMTP_USER') ?: (defined('SMTP_USER') ? SMTP_USER : '');
         $smtpPass = getenv('SMTP_PASS') ?: (defined('SMTP_PASS') ? SMTP_PASS : '');
@@ -35,12 +81,11 @@ class MailService
         $fromAddress = getenv('MAIL_FROM_ADDRESS') ?: (defined('MAIL_FROM_ADDRESS') ? MAIL_FROM_ADDRESS : 'noreply@pos.local');
         $fromName = getenv('MAIL_FROM_NAME') ?: (defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : $appName);
 
-        // Si no hay configuración SMTP o está en modo local sin servidor de correo
+        // Si no hay configuración SMTP configurada en el entorno
         if (empty($smtpHost) || empty($smtpUser)) {
-            error_log("[MailService DEV MODE] Enlace de verificación para {$toEmail}: {$verificationUrl}");
             return [
-                'success'  => true,
-                'message'  => 'Usuario registrado. Correo generado en modo desarrollo.',
+                'success'  => false,
+                'message'  => 'No hay un servidor de correo SMTP configurado en el servidor.',
                 'dev_link' => $verificationUrl
             ];
         }
@@ -55,7 +100,7 @@ class MailService
             $mail->Password   = str_replace(' ', '', trim($smtpPass));
             $mail->SMTPSecure = ($smtpSecure === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = $smtpPort;
-            $mail->Timeout    = 10;
+            $mail->Timeout    = 7;
 
             // Remitente y Destinatario
             $mail->setFrom($fromAddress, $fromName);
@@ -63,22 +108,24 @@ class MailService
 
             // Contenido del Correo
             $mail->isHTML(true);
-            $mail->Subject = '🔐 Verifica tu cuenta en ' . $appName;
-            $mail->Body    = self::buildVerificationTemplate($toName, $verificationUrl, $appName);
-            $mail->AltBody = "Hola {$toName},\n\nGracias por registrarte en {$appName}.\nPara activar tu cuenta, ingresa al siguiente enlace:\n{$verificationUrl}\n\nEste enlace expira en 24 horas.\n\nDesarrollado por Andres Felipe Ortiz Hurtatiz.";
+            $mail->Subject = $subject;
+            $mail->Body    = $htmlBody;
+            $mail->AltBody = $altBody;
 
             $mail->send();
 
             return [
                 'success'  => true,
-                'message'  => 'Correo de verificación enviado correctamente a ' . htmlspecialchars($toEmail) . '.',
+                'message'  => 'Correo de activación enviado exitosamente a ' . htmlspecialchars($toEmail) . '.',
                 'dev_link' => null
             ];
         } catch (Exception $e) {
-            error_log("Error al enviar correo con PHPMailer: " . $mail->ErrorInfo . " | " . $e->getMessage());
+            $errorDetalle = $mail->ErrorInfo ?: $e->getMessage();
+            error_log("Error al enviar correo con PHPMailer: " . $errorDetalle);
+
             return [
                 'success'  => false,
-                'message'  => 'No se pudo enviar el correo de verificación: ' . $mail->ErrorInfo,
+                'message'  => 'El servidor en la nube no pudo conectar al puerto SMTP (' . $errorDetalle . '). Los proveedores gratuitos como Render bloquean los puertos salientes 587 y 465.',
                 'dev_link' => $verificationUrl
             ];
         }
