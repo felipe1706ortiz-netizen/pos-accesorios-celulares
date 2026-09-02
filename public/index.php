@@ -16,9 +16,19 @@ define('ROOT_PATH', dirname(__DIR__));
 require_once APP_PATH . '/Config/config.php';
 
 // ------------------------------------------------------------------------------
-// AUTOLOADER PSR-4 (Carga automática de clases en el namespace 'App\')
+// AUTOLOADER PSR-4 (Carga automática de clases en el namespace 'App\' y 'PHPMailer\')
 // ------------------------------------------------------------------------------
 spl_autoload_register(function ($class) {
+    // Carga de PHPMailer
+    if (str_starts_with($class, 'PHPMailer\\PHPMailer\\')) {
+        $className = str_replace('PHPMailer\\PHPMailer\\', '', $class);
+        $file = APP_PATH . '/Lib/PHPMailer/' . $className . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+            return;
+        }
+    }
+
     $prefix = 'App\\';
     $baseDir = APP_PATH . '/';
 
@@ -57,10 +67,14 @@ $router->get('/', function() {
     exit;
 });
 
-// 1. MÓDULO DE AUTENTICACIÓN
+// 1. MÓDULO DE AUTENTICACIÓN Y REGISTRO
 $router->get('/login', 'AuthController@showLogin');
 $router->post('/login', 'AuthController@login');
 $router->get('/logout', 'AuthController@logout');
+$router->get('/registro', 'AuthController@showRegistro');
+$router->post('/registro', 'AuthController@registro');
+$router->get('/verificar-email', 'AuthController@verificarEmail');
+$router->post('/reenviar-verificacion', 'AuthController@reenviarVerificacion');
 
 // 2. DASHBOARD / RESUMEN GENERAL (ADMIN)
 $router->get('/dashboard', 'DashboardController@index');

@@ -10,12 +10,14 @@
     .auth-container {
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       background: radial-gradient(circle at 10% 20%, #1e1b4b 0%, #0b0f19 90%);
-      padding: 1.5rem;
+      padding: 2rem 1.5rem 1.5rem 1.5rem;
       position: relative;
       overflow: hidden;
+      box-sizing: border-box;
     }
     .auth-container::before {
       content: '';
@@ -42,13 +44,14 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       width: 100%;
-      max-width: 440px;
+      max-width: 460px;
       border-radius: var(--radius-xl);
       padding: 2.75rem 2.5rem;
       box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.8);
       position: relative;
       z-index: 10;
+      margin-bottom: 2rem;
     }
     .auth-header {
       text-align: center;
@@ -78,11 +81,27 @@
       color: var(--text-muted);
       margin-top: 0.35rem;
     }
+    .auth-footer {
+      position: relative;
+      z-index: 10;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.82rem;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .auth-footer strong {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
   <div class="auth-container">
     <?= $content ?? '' ?>
+    
+    <footer class="auth-footer">
+      Desarrollado por <strong>Andres Felipe Ortiz Hurtatiz</strong> © <?= date('Y') ?> | Todos los derechos reservados
+    </footer>
   </div>
 </body>
 </html>

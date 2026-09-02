@@ -141,3 +141,12 @@ defined('DEFAULT_PAGE_LIMIT') or define('DEFAULT_PAGE_LIMIT', 15);
 defined('SESSION_NAME')       or define('SESSION_NAME', 'POS_ACCESSORIES_SESSION');
 defined('SESSION_LIFETIME')   or define('SESSION_LIFETIME', 28800); // 8 horas en segundos
 defined('CSRF_TOKEN_KEY')     or define('CSRF_TOKEN_KEY', 'csrf_token_pos');
+
+// Parámetros de Correo Electrónico (SMTP / PHPMailer)
+defined('SMTP_HOST')          or define('SMTP_HOST', getenv('SMTP_HOST') ?: '');
+defined('SMTP_PORT')          or define('SMTP_PORT', (int)(getenv('SMTP_PORT') ?: 587));
+defined('SMTP_USER')          or define('SMTP_USER', getenv('SMTP_USER') ?: '');
+defined('SMTP_PASS')          or define('SMTP_PASS', getenv('SMTP_PASS') ?: '');
+defined('SMTP_SECURE')        or define('SMTP_SECURE', getenv('SMTP_SECURE') ?: 'tls');
+defined('MAIL_FROM_ADDRESS')  or define('MAIL_FROM_ADDRESS', getenv('MAIL_FROM_ADDRESS') ?: 'noreply@pos.local');
+defined('MAIL_FROM_NAME')     or define('MAIL_FROM_NAME', getenv('MAIL_FROM_NAME') ?: APP_NAME);

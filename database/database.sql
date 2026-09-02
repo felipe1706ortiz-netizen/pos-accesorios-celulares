@@ -29,11 +29,15 @@ CREATE TABLE `usuarios` (
   `password` VARCHAR(255) NOT NULL COMMENT 'Hash seguro de contraseña generado con password_hash (bcrypt)',
   `rol` ENUM('admin', 'cajero') NOT NULL DEFAULT 'cajero' COMMENT 'Rol dentro del sistema POS',
   `estado` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1 = Activo, 0 = Inactivo',
+  `email_verificado` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 = Verificado, 0 = Pendiente',
+  `token_verificacion` VARCHAR(100) NULL COMMENT 'Token de activación por correo',
+  `token_expira` DATETIME NULL COMMENT 'Fecha de expiración del token',
   `ultimo_login` DATETIME NULL COMMENT 'Fecha y hora del último acceso exitoso',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX `idx_usuario_login` (`usuario`, `estado`),
-  INDEX `idx_usuario_rol` (`rol`)
+  INDEX `idx_usuario_rol` (`rol`),
+  INDEX `idx_usuario_token` (`token_verificacion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ------------------------------------------------------------------------------

@@ -101,6 +101,11 @@
 
       <!-- Contenido inyectado por la vista hija -->
       <?= $content ?? '' ?>
+
+      <!-- FOOTER GLOBAL PERSISTENTE -->
+      <footer class="app-main-footer" style="margin-top: 3rem; padding: 1.75rem 0 1rem 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.84rem; color: var(--text-muted);">
+        Desarrollado por <strong style="color: var(--text-main); font-weight: 700;">Andres Felipe Ortiz Hurtatiz</strong> © <?= date('Y') ?> | Todos los derechos reservados
+      </footer>
     </main>
   </div>
 </div>
