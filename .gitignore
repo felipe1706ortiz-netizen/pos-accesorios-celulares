@@ -1,0 +1,27 @@
+# Environment files
+.env
+.env.local
+
+# Logs
+app/logs/*.log
+*.log
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Local caches & artifacts
+scratch/
+.system_generated/
+.agents/
+
+# Dependencies
+vendor/
+node_modules/

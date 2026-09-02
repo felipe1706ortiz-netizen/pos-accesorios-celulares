@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Si el archivo o directorio solicitado existe físicamente, servirlo directamente (css, js, imágenes)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # De lo contrario, redirigir todo al Front Controller
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# Proteger listado de directorios
+Options -Indexes

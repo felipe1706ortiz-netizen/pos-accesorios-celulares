@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirigir todas las peticiones hacia la carpeta public
+    RewriteCond %{REQUEST_URI} !/public/ [NC]
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
+</IfModule>
+
+# Bloquear acceso directo a archivos sensibles
+<IfModule mod_authz_core.c>
+    <FilesMatch "\.(sql|log|ini|env)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+
+Options -Indexes
