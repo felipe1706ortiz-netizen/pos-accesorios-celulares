@@ -105,24 +105,29 @@ $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
     ? 'https://' : 'http://';
 
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-$scriptName = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-$baseUrl = rtrim($protocol . $host . $scriptName, '/');
+$scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
 
-// Si se ejecuta desde public/, normalizar la URL
-if (substr($baseUrl, -7) === '/public') {
-    $baseUrl = substr($baseUrl, 0, -7);
-}
+// Detectar si DocumentRoot ya apunta a public/ (ej: Docker / Render / Railway)
+$docRoot = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?: '');
+$isDocRootPublic = (substr($docRoot, -7) === '/public') || ($scriptDir === '/' || $scriptDir === '.' || $scriptDir === '');
 
-// Si la base url está vacía o es solo https://host/, normalizar
-if (empty($scriptName) || $scriptName === '/' || $scriptName === '.') {
+if ($isDocRootPublic) {
     $baseUrl = rtrim($protocol . $host, '/');
+    $publicUrl = $baseUrl; // Los assets están directamente en /css, /js, etc.
+} else {
+    // Si se ejecuta en un subdirectorio local (ej: XAMPP http://localhost/poss)
+    $baseUrl = rtrim($protocol . $host . $scriptDir, '/');
+    if (substr($baseUrl, -7) === '/public') {
+        $baseUrl = substr($baseUrl, 0, -7);
+    }
+    $publicUrl = $baseUrl . '/public';
 }
 
 defined('APP_URL')    or define('APP_URL', $baseUrl);
-defined('PUBLIC_URL') or define('PUBLIC_URL', $baseUrl . '/public');
-defined('ASSETS_URL') or define('ASSETS_URL', PUBLIC_URL . '/assets');
-defined('CSS_URL')    or define('CSS_URL', PUBLIC_URL . '/css');
-defined('JS_URL')     or define('JS_URL', PUBLIC_URL . '/js');
+defined('PUBLIC_URL') or define('PUBLIC_URL', $publicUrl);
+defined('ASSETS_URL') or define('ASSETS_URL', $publicUrl . '/assets');
+defined('CSS_URL')    or define('CSS_URL', $publicUrl . '/css');
+defined('JS_URL')     or define('JS_URL', $publicUrl . '/js');
 
 // ------------------------------------------------------------------------------
 // PARÁMETROS DE LA APLICACIÓN
