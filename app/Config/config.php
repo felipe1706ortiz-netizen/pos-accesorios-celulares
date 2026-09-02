@@ -12,6 +12,30 @@
 defined('APP_PATH') or define('APP_PATH', dirname(__DIR__));
 defined('ROOT_PATH') or define('ROOT_PATH', dirname(APP_PATH));
 
+// ------------------------------------------------------------------------------
+// CARGADOR AUTOMÁTICO DE ARCHIVO .env
+// ------------------------------------------------------------------------------
+$envFile = ROOT_PATH . '/.env';
+if (file_exists($envFile)) {
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#')) {
+            continue;
+        }
+        if (str_contains($line, '=')) {
+            [$key, $value] = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value);
+            // Quitar comillas si las tiene
+            $value = trim($value, '"\'');
+            putenv("{$key}={$value}");
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+        }
+    }
+}
+
 // Configuración de visualización de errores (Cambiar a false en producción o vía ENV)
 define('ENVIRONMENT', getenv('APP_ENV') ?: 'development'); // 'development' o 'production'
 
