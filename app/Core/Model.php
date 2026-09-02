@@ -127,14 +127,21 @@ abstract class Model
      * Inserta un nuevo registro en la tabla
      * 
      * @param array $data Datos en formato ['columna' => 'valor']
-     * @return int ID generado por AUTO_INCREMENT
+     * @return int ID generado por AUTO_INCREMENT o SEQUENCE
      */
     public function insert(array $data): int
     {
         $columns = implode(', ', array_keys($data));
         $placeholders = ':' . implode(', :', array_keys($data));
-        $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
+        
+        $driver = defined('DB_DRIVER') ? DB_DRIVER : 'mysql';
+        if ($driver === 'pgsql') {
+            $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders}) RETURNING {$this->primaryKey}";
+            $stmt = $this->query($sql, $data);
+            return (int)$stmt->fetchColumn();
+        }
 
+        $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
         $this->query($sql, $data);
         return (int)$this->db->lastInsertId();
     }

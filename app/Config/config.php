@@ -29,14 +29,48 @@ if (ENVIRONMENT === 'development') {
 date_default_timezone_set(getenv('APP_TIMEZONE') ?: 'America/Bogota');
 
 // ------------------------------------------------------------------------------
-// PARÁMETROS DE CONEXIÓN A BASE DE DATOS (MySQL / MariaDB)
+// PARÁMETROS DE CONEXIÓN A BASE DE DATOS (MySQL o Supabase / PostgreSQL)
 // ------------------------------------------------------------------------------
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_PORT', getenv('DB_PORT') ?: '3306');
-define('DB_NAME', getenv('DB_NAME') ?: 'pos_accesorios');
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
-define('DB_CHARSET', getenv('DB_CHARSET') ?: 'utf8mb4');
+// Soporte para URL de conexión directa (ej: Supabase Connection String)
+$dbUrl = getenv('DATABASE_URL') ?: getenv('SUPABASE_DB_URL');
+$dbConfig = [
+    'driver'  => getenv('DB_DRIVER') ?: 'mysql',
+    'host'    => getenv('DB_HOST') ?: 'localhost',
+    'port'    => getenv('DB_PORT') ?: '3306',
+    'name'    => getenv('DB_NAME') ?: 'pos_accesorios',
+    'user'    => getenv('DB_USER') ?: 'root',
+    'pass'    => getenv('DB_PASS') !== false ? getenv('DB_PASS') : '',
+    'charset' => getenv('DB_CHARSET') ?: 'utf8mb4',
+    'sslmode' => getenv('DB_SSLMODE') ?: 'require'
+];
+
+if ($dbUrl) {
+    $parsedUrl = parse_url($dbUrl);
+    if ($parsedUrl) {
+        $scheme = $parsedUrl['scheme'] ?? 'mysql';
+        $dbConfig['driver'] = (str_starts_with($scheme, 'postgres') || $scheme === 'pgsql') ? 'pgsql' : 'mysql';
+        $dbConfig['host']   = $parsedUrl['host'] ?? $dbConfig['host'];
+        $dbConfig['port']   = (string)($parsedUrl['port'] ?? ($dbConfig['driver'] === 'pgsql' ? '5432' : '3306'));
+        $dbConfig['user']   = isset($parsedUrl['user']) ? urldecode($parsedUrl['user']) : $dbConfig['user'];
+        $dbConfig['pass']   = isset($parsedUrl['pass']) ? urldecode($parsedUrl['pass']) : $dbConfig['pass'];
+        $dbConfig['name']   = isset($parsedUrl['path']) ? ltrim($parsedUrl['path'], '/') : $dbConfig['name'];
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $queryParams);
+            if (isset($queryParams['sslmode'])) {
+                $dbConfig['sslmode'] = $queryParams['sslmode'];
+            }
+        }
+    }
+}
+
+define('DB_DRIVER',  $dbConfig['driver']);
+define('DB_HOST',    $dbConfig['host']);
+define('DB_PORT',    $dbConfig['port']);
+define('DB_NAME',    $dbConfig['name']);
+define('DB_USER',    $dbConfig['user']);
+define('DB_PASS',    $dbConfig['pass']);
+define('DB_CHARSET', $dbConfig['charset']);
+define('DB_SSLMODE', $dbConfig['sslmode']);
 
 // ------------------------------------------------------------------------------
 // URL BASE Y RUTAS DE DIRECTORIOS

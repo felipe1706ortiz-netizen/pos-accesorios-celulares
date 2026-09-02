@@ -93,6 +93,33 @@ http://localhost/poss
 
 ---
 
+## ⚡ Conexión en la Nube con Supabase (PostgreSQL)
+
+El sistema cuenta con soporte multi-driver nativo para **Supabase**:
+
+### 1. Crear las Tablas en Supabase
+1. Ingresa a tu proyecto en [Supabase](https://supabase.com/).
+2. Ve a la pestaña **SQL Editor** en el panel izquierdo.
+3. Copia y pega el contenido de [`database/supabase_schema.sql`](database/supabase_schema.sql) y haz clic en **Run**.
+
+### 2. Configurar la Conexión
+En tu archivo `.env` o en las variables de entorno de tu servidor:
+```env
+DB_DRIVER=pgsql
+DB_HOST=aws-0-us-east-1.pooler.supabase.com
+DB_PORT=6543
+DB_NAME=postgres
+DB_USER=postgres.tu-proyecto-ref
+DB_PASS=tu-password-de-supabase
+DB_SSLMODE=require
+```
+*O utilizando la URL de conexión directa:*
+```env
+DATABASE_URL=postgresql://postgres.tu-ref:tu-password@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require
+```
+
+---
+
 ## 🔑 Credenciales por Defecto
 
 | Rol | Usuario / Login | Contraseña | Acceso |

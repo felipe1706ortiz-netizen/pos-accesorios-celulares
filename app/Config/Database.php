@@ -60,18 +60,30 @@ class Database
     }
 
     /**
-     * Establece la conexión PDO con MySQL utilizando configuraciones de seguridad estrictas
+     * Establece la conexión PDO con MySQL o PostgreSQL (Supabase) con máxima seguridad
      * @throws PDOException
      */
     private function connect(): void
     {
-        $dsn = sprintf(
-            "mysql:host=%s;port=%s;dbname=%s;charset=%s",
-            DB_HOST,
-            DB_PORT,
-            DB_NAME,
-            DB_CHARSET
-        );
+        $driver = defined('DB_DRIVER') ? DB_DRIVER : 'mysql';
+
+        if ($driver === 'pgsql') {
+            $dsn = sprintf(
+                "pgsql:host=%s;port=%s;dbname=%s;sslmode=%s",
+                DB_HOST,
+                DB_PORT,
+                DB_NAME,
+                defined('DB_SSLMODE') ? DB_SSLMODE : 'require'
+            );
+        } else {
+            $dsn = sprintf(
+                "mysql:host=%s;port=%s;dbname=%s;charset=%s",
+                DB_HOST,
+                DB_PORT,
+                DB_NAME,
+                DB_CHARSET
+            );
+        }
 
         $options = [
             // Lanzar excepciones en caso de errores SQL
@@ -88,10 +100,12 @@ class Database
             
             // Timeout de conexión en segundos
             PDO::ATTR_TIMEOUT            => 5,
-            
-            // Configurar juego de caracteres inicial y zona horaria en MySQL
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . DB_CHARSET . " COLLATE " . DB_CHARSET . "_unicode_ci"
         ];
+
+        // Opciones específicas de MySQL
+        if ($driver === 'mysql' && defined('PDO::MYSQL_ATTR_INIT_COMMAND')) {
+            $options[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES " . DB_CHARSET . " COLLATE " . DB_CHARSET . "_unicode_ci";
+        }
 
         try {
             $this->connection = new PDO($dsn, DB_USER, DB_PASS, $options);
