@@ -51,8 +51,8 @@ class MailService
             $mail->isSMTP();
             $mail->Host       = $smtpHost;
             $mail->SMTPAuth   = true;
-            $mail->Username   = $smtpUser;
-            $mail->Password   = $smtpPass;
+            $mail->Username   = trim($smtpUser);
+            $mail->Password   = str_replace(' ', '', trim($smtpPass));
             $mail->SMTPSecure = ($smtpSecure === 'ssl') ? PHPMailer::ENCRYPTION_SMTPS : PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = $smtpPort;
             $mail->Timeout    = 10;
