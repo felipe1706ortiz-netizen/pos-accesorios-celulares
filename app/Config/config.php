@@ -37,7 +37,7 @@ if (file_exists($envFile)) {
 }
 
 // Configuración de visualización de errores (Cambiar a false en producción o vía ENV)
-define('ENVIRONMENT', getenv('APP_ENV') ?: 'development'); // 'development' o 'production'
+defined('ENVIRONMENT') or define('ENVIRONMENT', getenv('APP_ENV') ?: 'development'); // 'development' o 'production'
 
 if (ENVIRONMENT === 'development') {
     error_reporting(E_ALL);
@@ -87,20 +87,23 @@ if ($dbUrl) {
     }
 }
 
-define('DB_DRIVER',  $dbConfig['driver']);
-define('DB_HOST',    $dbConfig['host']);
-define('DB_PORT',    $dbConfig['port']);
-define('DB_NAME',    $dbConfig['name']);
-define('DB_USER',    $dbConfig['user']);
-define('DB_PASS',    $dbConfig['pass']);
-define('DB_CHARSET', $dbConfig['charset']);
-define('DB_SSLMODE', $dbConfig['sslmode']);
+defined('DB_DRIVER')  or define('DB_DRIVER',  $dbConfig['driver']);
+defined('DB_HOST')    or define('DB_HOST',    $dbConfig['host']);
+defined('DB_PORT')    or define('DB_PORT',    $dbConfig['port']);
+defined('DB_NAME')    or define('DB_NAME',    $dbConfig['name']);
+defined('DB_USER')    or define('DB_USER',    $dbConfig['user']);
+defined('DB_PASS')    or define('DB_PASS',    $dbConfig['pass']);
+defined('DB_CHARSET') or define('DB_CHARSET', $dbConfig['charset']);
+defined('DB_SSLMODE') or define('DB_SSLMODE', $dbConfig['sslmode']);
 
 // ------------------------------------------------------------------------------
 // URL BASE Y RUTAS DE DIRECTORIOS
 // ------------------------------------------------------------------------------
-// Detección automática de protocolo y URL base para XAMPP
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+// Detección automática de protocolo y URL base para Render, Railway y XAMPP
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') 
+    || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') 
+    ? 'https://' : 'http://';
+
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $scriptName = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
 $baseUrl = rtrim($protocol . $host . $scriptName, '/');
@@ -110,21 +113,26 @@ if (substr($baseUrl, -7) === '/public') {
     $baseUrl = substr($baseUrl, 0, -7);
 }
 
-define('APP_URL', $baseUrl);
-define('PUBLIC_URL', $baseUrl . '/public');
-define('ASSETS_URL', PUBLIC_URL . '/assets');
-define('CSS_URL', PUBLIC_URL . '/css');
-define('JS_URL', PUBLIC_URL . '/js');
+// Si la base url está vacía o es solo https://host/, normalizar
+if (empty($scriptName) || $scriptName === '/' || $scriptName === '.') {
+    $baseUrl = rtrim($protocol . $host, '/');
+}
+
+defined('APP_URL')    or define('APP_URL', $baseUrl);
+defined('PUBLIC_URL') or define('PUBLIC_URL', $baseUrl . '/public');
+defined('ASSETS_URL') or define('ASSETS_URL', PUBLIC_URL . '/assets');
+defined('CSS_URL')    or define('CSS_URL', PUBLIC_URL . '/css');
+defined('JS_URL')     or define('JS_URL', PUBLIC_URL . '/js');
 
 // ------------------------------------------------------------------------------
 // PARÁMETROS DE LA APLICACIÓN
 // ------------------------------------------------------------------------------
-define('APP_NAME', 'POS Celulares & Accesorios');
-define('APP_VERSION', '1.0.0');
-define('CURRENCY_SYMBOL', '$');
-define('DEFAULT_PAGE_LIMIT', 15);
+defined('APP_NAME')           or define('APP_NAME', 'POS Celulares & Accesorios');
+defined('APP_VERSION')        or define('APP_VERSION', '1.0.0');
+defined('CURRENCY_SYMBOL')    or define('CURRENCY_SYMBOL', '$');
+defined('DEFAULT_PAGE_LIMIT') or define('DEFAULT_PAGE_LIMIT', 15);
 
 // Parámetros de Seguridad y Sesión
-define('SESSION_NAME', 'POS_ACCESSORIES_SESSION');
-define('SESSION_LIFETIME', 28800); // 8 horas en segundos
-define('CSRF_TOKEN_KEY', 'csrf_token_pos');
+defined('SESSION_NAME')       or define('SESSION_NAME', 'POS_ACCESSORIES_SESSION');
+defined('SESSION_LIFETIME')   or define('SESSION_LIFETIME', 28800); // 8 horas en segundos
+defined('CSRF_TOKEN_KEY')     or define('CSRF_TOKEN_KEY', 'csrf_token_pos');
