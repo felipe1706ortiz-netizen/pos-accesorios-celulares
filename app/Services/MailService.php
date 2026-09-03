@@ -37,7 +37,13 @@ class MailService
         // --------------------------------------------------------------------------
         $resendApiKey = getenv('RESEND_API_KEY') ?: (defined('RESEND_API_KEY') ? RESEND_API_KEY : '');
         if (!empty($resendApiKey) && function_exists('curl_init')) {
-            $fromAddress = getenv('MAIL_FROM_ADDRESS') ?: 'onboarding@resend.dev';
+            $configuredFrom = getenv('RESEND_FROM') ?: (getenv('MAIL_FROM_ADDRESS') ?: (defined('MAIL_FROM_ADDRESS') ? MAIL_FROM_ADDRESS : ''));
+            // Resend no permite remitentes @gmail.com, @hotmail.com, etc. sin dominio verificado.
+            // Si el correo configurado es un proveedor público gratuito, usamos 'onboarding@resend.dev'
+            $domain = substr(strrchr($configuredFrom, "@"), 1);
+            $isPublicProvider = in_array(strtolower($domain), ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com', 'live.com']);
+            $fromAddress = (!empty($configuredFrom) && !$isPublicProvider) ? $configuredFrom : 'onboarding@resend.dev';
+
             $payload = [
                 'from'    => $appName . ' <' . $fromAddress . '>',
                 'to'      => [$toEmail],
@@ -66,9 +72,21 @@ class MailService
                     'dev_link' => null
                 ];
             } else {
+                $errJson = json_decode($response, true);
+                $resendErrMsg = $errJson['message'] ?? $curlError;
                 error_log("Error Resend API (HTTP {$httpCode}): " . $response . " | " . $curlError);
+
+                // Si Resend está en modo sandbox/prueba (solo permite enviar al correo del titular):
+                if ($httpCode === 403) {
+                    return [
+                        'success'  => false,
+                        'message'  => 'Resend API en modo de prueba (Sandbox): ' . htmlspecialchars($resendErrMsg) . '. Puedes activar tu cuenta directamente con el botón de abajo:',
+                        'dev_link' => $verificationUrl
+                    ];
+                }
             }
         }
+
 
         // --------------------------------------------------------------------------
         // MÉTODO 2: SMTP VÍA PHPMAILER (Puerto 587 o 465)
