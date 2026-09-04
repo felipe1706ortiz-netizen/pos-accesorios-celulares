@@ -223,16 +223,15 @@ class AuthController extends Controller
         $mailResult = MailService::sendVerificationEmail($email, $nombre, $token);
 
         $this->render('auth/verificar_email', [
-            'title'       => $mailResult['success'] ? 'Verificación de Cuenta Enviada' : 'Activación de Cuenta',
+            'title'       => $mailResult['success'] ? 'Verificación de Cuenta Enviada' : 'Error en Envío',
             'status'      => 'pending',
             'email'       => $email,
             'nombre'      => $nombre,
             'mailSuccess' => $mailResult['success'],
             'mailMessage' => $mailResult['message'],
-            'devLink'     => $mailResult['dev_link'] ?? null,
             'message'     => $mailResult['success'] 
                 ? 'Hemos enviado un enlace de activación a tu correo. Por favor revisa tu bandeja de entrada o spam para activarla.'
-                : 'El servidor en la nube no pudo enviar el correo directamente por SMTP (bloqueo de puertos en proveedores cloud gratuitos). Puedes activar tu cuenta directamente con el botón que aparece abajo:'
+                : 'No fue posible enviar el correo de activación en este momento debido a restricciones de conexión en el servidor.'
         ], 'auth');
     }
 
@@ -319,16 +318,15 @@ class AuthController extends Controller
         $mailResult = MailService::sendVerificationEmail($user['email'], $user['nombre'], $token);
 
         $this->render('auth/verificar_email', [
-            'title'       => $mailResult['success'] ? 'Correo Reenviado' : 'Activación de Cuenta',
+            'title'       => $mailResult['success'] ? 'Correo Reenviado' : 'Error en Envío',
             'status'      => 'pending',
             'email'       => $user['email'],
             'nombre'      => $user['nombre'],
             'mailSuccess' => $mailResult['success'],
             'mailMessage' => $mailResult['message'],
-            'devLink'     => $mailResult['dev_link'] ?? null,
             'message'     => $mailResult['success'] 
                 ? 'Se ha enviado un nuevo enlace de activación a tu correo electrónico.'
-                : 'El servidor en la nube no pudo enviar el correo directamente por SMTP (bloqueo de puertos en proveedores cloud gratuitos). Puedes activar tu cuenta directamente con el botón que aparece abajo:'
+                : 'No fue posible enviar el correo de activación en este momento debido a restricciones de conexión en el servidor.'
         ], 'auth');
     }
 
