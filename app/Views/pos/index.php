@@ -29,10 +29,7 @@
           <kbd>F4</kbd> <span>Descuento</span>
         </button>
         <button type="button" class="shortcut-btn" id="btnShortcutF6" style="color: var(--success); border-color: #a7f3d0;" onclick="abrirModalEstadoGaveta()">
-          <kbd>F6</kbd> <span>💵 Gaveta</span>
-        </button>
-        <button type="button" class="shortcut-btn" id="btnShortcutF9" style="color: #0284c7; border-color: #bae6fd;" onclick="dispararAperturaGaveta()">
-          <kbd>F9</kbd> <span>🔓 Abrir</span>
+          <kbd>F6</kbd> <span>💵 Ver Caja</span>
         </button>
         <button type="button" class="shortcut-btn" id="btnShortcutF8" style="color: var(--danger); border-color: #fecdd3;" onclick="cancelarVenta()">
           <kbd>F8</kbd> <span>Cancelar</span>

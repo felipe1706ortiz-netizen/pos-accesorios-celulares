@@ -75,6 +75,10 @@ $router->get('/registro', 'AuthController@showRegistro');
 $router->post('/registro', 'AuthController@registro');
 $router->get('/verificar-email', 'AuthController@verificarEmail');
 $router->post('/reenviar-verificacion', 'AuthController@reenviarVerificacion');
+$router->get('/recuperar-password', 'AuthController@showRecuperarPassword');
+$router->post('/recuperar-password', 'AuthController@recuperarPassword');
+$router->get('/restablecer-password', 'AuthController@showRestablecerPassword');
+$router->post('/restablecer-password', 'AuthController@restablecerPassword');
 
 // 2. DASHBOARD / RESUMEN GENERAL (ADMIN)
 $router->get('/dashboard', 'DashboardController@index');

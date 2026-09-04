@@ -40,8 +40,12 @@ class AuthController extends Controller
             return;
         }
 
+        $rememberedUser = $_COOKIE['pos_remember_user'] ?? '';
+
         $this->render('auth/login', [
-            'title' => 'Acceso al Sistema POS - ' . APP_NAME
+            'title'             => 'Acceso al Sistema POS - ' . APP_NAME,
+            'oldUsuario'        => $rememberedUser,
+            'rememberedUsuario' => !empty($rememberedUser)
         ], 'auth');
     }
 
@@ -60,6 +64,7 @@ class AuthController extends Controller
 
         $usuario = trim($this->getPost('usuario', ''));
         $password = $this->getPost('password', '');
+        $recordarme = $this->getPost('recordarme', '');
 
         if (empty($usuario) || empty($password)) {
             $this->render('auth/login', [
@@ -90,6 +95,13 @@ class AuthController extends Controller
                 'oldUsuario'     => $usuario
             ], 'auth');
             return;
+        }
+
+        // Gestionar opción "Recordarme" con cookie de 30 días
+        if (!empty($recordarme)) {
+            setcookie('pos_remember_user', $usuario, time() + (86400 * 30), '/', '', false, true);
+        } else {
+            setcookie('pos_remember_user', '', time() - 3600, '/');
         }
 
         // Iniciar sesión y actualizar último acceso
@@ -327,6 +339,196 @@ class AuthController extends Controller
             'message'     => $mailResult['success'] 
                 ? 'Se ha enviado un nuevo enlace de activación a tu correo electrónico.'
                 : 'No fue posible enviar el correo de activación en este momento debido a restricciones de conexión en el servidor.'
+        ], 'auth');
+    }
+
+    /**
+     * Muestra la pantalla de solicitud de recuperación de contraseña
+     */
+    public function showRecuperarPassword(): void
+    {
+        if (Auth::check()) {
+            $this->redirect('/dashboard');
+            return;
+        }
+
+        $this->render('auth/recuperar_password', [
+            'title' => 'Recuperar Contraseña - ' . APP_NAME
+        ], 'auth');
+    }
+
+    /**
+     * Procesa la solicitud de recuperación y envía el correo con token
+     */
+    public function recuperarPassword(): void
+    {
+        if (!$this->validateCsrf()) {
+            $this->render('auth/recuperar_password', [
+                'title' => 'Recuperar Contraseña',
+                'error' => 'La sesión del formulario expiró. Por favor intente nuevamente.'
+            ], 'auth');
+            return;
+        }
+
+        $email = strtolower(trim($this->getPost('email', '')));
+
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->render('auth/recuperar_password', [
+                'title'    => 'Recuperar Contraseña',
+                'error'    => 'Por favor ingrese una dirección de correo electrónico válida.',
+                'oldEmail' => $email
+            ], 'auth');
+            return;
+        }
+
+        $user = $this->usuarioModel->findByEmail($email);
+
+        if (!$user) {
+            $this->render('auth/recuperar_password', [
+                'title'    => 'Recuperar Contraseña',
+                'error'    => 'No se encontró ninguna cuenta asociada a este correo electrónico.',
+                'oldEmail' => $email
+            ], 'auth');
+            return;
+        }
+
+        // Generar token de recuperación de 64 caracteres válido por 2 horas
+        $token = bin2hex(random_bytes(32));
+        $tokenExpira = date('Y-m-d H:i:s', strtotime('+2 hours'));
+        $this->usuarioModel->setPasswordResetToken((int)$user['id'], $token, $tokenExpira);
+
+        // Enviar correo de restablecimiento
+        $mailResult = MailService::sendPasswordResetEmail($user['email'], $user['nombre'], $token);
+
+        if ($mailResult['success']) {
+            $this->render('auth/recuperar_password', [
+                'title'   => 'Enlace Enviado',
+                'success' => 'Hemos enviado el enlace para restablecer tu contraseña a tu correo electrónico.',
+                'email'   => $email
+            ], 'auth');
+        } else {
+            $this->render('auth/recuperar_password', [
+                'title'    => 'Recuperar Contraseña',
+                'error'    => 'No se pudo enviar el correo de recuperación (' . ($mailResult['message'] ?? '') . '). Por favor contacte al soporte técnico.',
+                'oldEmail' => $email
+            ], 'auth');
+        }
+    }
+
+    /**
+     * Muestra la pantalla para ingresar la nueva contraseña
+     */
+    public function showRestablecerPassword(): void
+    {
+        $token = trim($this->getQuery('token', ''));
+
+        if (empty($token)) {
+            $this->render('auth/restablecer_password', [
+                'title'   => 'Enlace Inválido',
+                'status'  => 'invalid',
+                'message' => 'El enlace no contiene un token de restablecimiento válido.'
+            ], 'auth');
+            return;
+        }
+
+        $user = $this->usuarioModel->findByResetToken($token);
+
+        if (!$user) {
+            $this->render('auth/restablecer_password', [
+                'title'   => 'Enlace Inválido',
+                'status'  => 'invalid',
+                'message' => 'Este enlace de recuperación no es válido o ya fue utilizado.'
+            ], 'auth');
+            return;
+        }
+
+        if (!empty($user['token_recuperacion_expira']) && strtotime($user['token_recuperacion_expira']) < time()) {
+            $this->render('auth/restablecer_password', [
+                'title'   => 'Enlace Expirado',
+                'status'  => 'expired',
+                'message' => 'El enlace de recuperación ha expirado (validez de 2 horas). Por favor solicita uno nuevo.'
+            ], 'auth');
+            return;
+        }
+
+        $this->render('auth/restablecer_password', [
+            'title' => 'Restablecer Contraseña - ' . APP_NAME,
+            'token' => $token
+        ], 'auth');
+    }
+
+    /**
+     * Procesa el cambio de contraseña
+     */
+    public function restablecerPassword(): void
+    {
+        if (!$this->validateCsrf()) {
+            $this->render('auth/restablecer_password', [
+                'title' => 'Restablecer Contraseña',
+                'error' => 'La sesión del formulario expiró. Por favor intente nuevamente.',
+                'token' => $this->getPost('token', '')
+            ], 'auth');
+            return;
+        }
+
+        $token = trim($this->getPost('token', ''));
+        $password = $this->getPost('password', '');
+        $passwordConfirm = $this->getPost('password_confirm', '');
+
+        if (empty($token)) {
+            $this->render('auth/restablecer_password', [
+                'title'   => 'Enlace Inválido',
+                'status'  => 'invalid',
+                'message' => 'El token de seguridad es requerido.'
+            ], 'auth');
+            return;
+        }
+
+        $user = $this->usuarioModel->findByResetToken($token);
+
+        if (!$user) {
+            $this->render('auth/restablecer_password', [
+                'title'   => 'Enlace Inválido',
+                'status'  => 'invalid',
+                'message' => 'Este enlace de recuperación no es válido o ya fue utilizado.'
+            ], 'auth');
+            return;
+        }
+
+        if (!empty($user['token_recuperacion_expira']) && strtotime($user['token_recuperacion_expira']) < time()) {
+            $this->render('auth/restablecer_password', [
+                'title'   => 'Enlace Expirado',
+                'status'  => 'expired',
+                'message' => 'El enlace de recuperación ha expirado. Por favor solicita uno nuevo.'
+            ], 'auth');
+            return;
+        }
+
+        if (strlen($password) < 6) {
+            $this->render('auth/restablecer_password', [
+                'title' => 'Restablecer Contraseña',
+                'error' => 'La nueva contraseña debe tener al menos 6 caracteres.',
+                'token' => $token
+            ], 'auth');
+            return;
+        }
+
+        if ($password !== $passwordConfirm) {
+            $this->render('auth/restablecer_password', [
+                'title' => 'Restablecer Contraseña',
+                'error' => 'Las contraseñas ingresadas no coinciden.',
+                'token' => $token
+            ], 'auth');
+            return;
+        }
+
+        $newPasswordHash = password_hash($password, PASSWORD_BCRYPT);
+        $this->usuarioModel->updatePasswordAndClearResetToken((int)$user['id'], $newPasswordHash);
+
+        $this->render('auth/restablecer_password', [
+            'title'   => '¡Contraseña Actualizada!',
+            'status'  => 'success',
+            'message' => 'Tu contraseña ha sido restablecida exitosamente. Ya puedes iniciar sesión con tus nuevas credenciales.'
         ], 'auth');
     }
 

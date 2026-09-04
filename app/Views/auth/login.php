@@ -43,34 +43,62 @@
 
     <div class="form-group">
       <label for="password" class="form-label" style="font-weight: 700;">Contraseña</label>
-      <input 
-        type="password" 
-        id="password" 
-        name="password" 
-        class="form-control form-control-lg" 
-        placeholder="••••••••" 
-        required
-      >
+      <div style="position: relative; display: flex; align-items: center;">
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          class="form-control form-control-lg" 
+          placeholder="••••••••" 
+          required
+          style="padding-right: 2.75rem;"
+        >
+        <button 
+          type="button" 
+          id="togglePasswordBtn" 
+          onclick="togglePasswordVisibility('password', this)" 
+          title="Mostrar / Ocultar Contraseña"
+          style="position: absolute; right: 0.75rem; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; padding: 0.25rem; display: flex; align-items: center; justify-content: center; outline: none;"
+        >
+          👁️
+        </button>
+      </div>
     </div>
 
-    <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top: 1.25rem; width: 100%; font-weight: 800; padding: 0.85rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin: 0.75rem 0 1.25rem 0; font-size: 0.88rem; flex-wrap: wrap; gap: 0.5rem;">
+      <label style="display: flex; align-items: center; gap: 0.45rem; cursor: pointer; user-select: none; color: var(--text-secondary); font-weight: 600;">
+        <input type="checkbox" name="recordarme" id="recordarme" value="1" <?= !empty($rememberedUsuario) ? 'checked' : '' ?> style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary);">
+        <span>Recordarme</span>
+      </label>
+      <a href="<?= APP_URL ?>/recuperar-password" style="color: var(--primary); font-weight: 700; text-decoration: none;">
+        ¿Olvidaste tu contraseña?
+      </a>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top: 0.5rem; width: 100%; font-weight: 800; padding: 0.85rem;">
       <span>Ingresar al Sistema</span>
       <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
     </button>
   </form>
 
-  <div style="text-align: center; margin-top: 1.25rem; font-size: 0.9rem; color: var(--text-muted);">
+  <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
     ¿No tienes una cuenta de cajero? 
     <a href="<?= APP_URL ?>/registro" style="color: var(--primary); font-weight: 800; text-decoration: none;">Regístrate aquí</a>
   </div>
-
-  <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1.5px solid var(--border-color); font-size: 0.82rem; color: var(--text-muted); text-align: center; background: #f8fafc; border-radius: var(--radius-md); padding: 0.85rem;">
-    <div style="font-weight: 700; margin-bottom: 0.25rem; color: var(--text-secondary);">Credenciales de Prueba Rápidas:</div>
-    <div style="display: flex; justify-content: space-around; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; margin-top: 0.35rem;">
-      <span>👤 Admin: <strong>admin</strong> / <strong>Admin123*</strong></span>
-    </div>
-    <div style="display: flex; justify-content: space-around; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; margin-top: 0.25rem;">
-      <span>💼 Cajero: <strong>cajero</strong> / <strong>Cajero123*</strong></span>
-    </div>
-  </div>
 </div>
+
+<script>
+function togglePasswordVisibility(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+    btn.title = 'Ocultar Contraseña';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
+    btn.title = 'Mostrar Contraseña';
+  }
+}
+</script>

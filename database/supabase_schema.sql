@@ -31,6 +31,8 @@ CREATE TABLE usuarios (
   email_verificado SMALLINT NOT NULL DEFAULT 0,
   token_verificacion VARCHAR(100) NULL,
   token_expira TIMESTAMP WITH TIME ZONE NULL,
+  token_recuperacion VARCHAR(100) NULL,
+  token_recuperacion_expira TIMESTAMP WITH TIME ZONE NULL,
   ultimo_login TIMESTAMP WITH TIME ZONE NULL,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -39,6 +41,7 @@ CREATE TABLE usuarios (
 CREATE INDEX idx_usuario_login ON usuarios (usuario, estado);
 CREATE INDEX idx_usuario_rol ON usuarios (rol);
 CREATE INDEX idx_usuario_token ON usuarios (token_verificacion);
+CREATE INDEX idx_usuario_recuperacion ON usuarios (token_recuperacion);
 
 -- ------------------------------------------------------------------------------
 -- 2. TABLA: categorias

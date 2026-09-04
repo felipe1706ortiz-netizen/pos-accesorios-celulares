@@ -77,10 +77,7 @@
         <h1 class="page-title"><?= htmlspecialchars($pageTitle ?? 'Panel de Control') ?></h1>
       </div>
       <div class="topbar-right" style="display: flex; align-items: center; gap: 0.6rem;">
-        <button type="button" class="btn btn-outline btn-sm" onclick="dispararAperturaGaveta()" title="Disparar pulso al cajón monedero (Gaveta)" style="font-weight: 700; display: flex; align-items: center; gap: 0.35rem; color: #0284c7; border-color: #cbd5e1;">
-          🔓 <span>Abrir Gaveta</span>
-        </button>
-        <button type="button" class="btn btn-outline btn-sm" onclick="abrirModalEstadoGaveta()" title="Ver saldo actual en gaveta" style="font-weight: 700; display: flex; align-items: center; gap: 0.35rem; color: var(--text-main); border-color: #cbd5e1;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="abrirModalEstadoGaveta()" title="Ver saldo y estado actual de caja" style="font-weight: 700; display: flex; align-items: center; gap: 0.35rem; color: var(--text-main); border-color: #cbd5e1; background: #fff;">
           💵 <span>Ver Caja</span>
         </button>
         <span class="badge badge-info" style="margin-left: 0.25rem;">🟢 En Línea</span>
@@ -128,14 +125,9 @@
       </div>
     </div>
 
-    <div class="modal-footer" style="justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-      <button type="button" class="btn btn-outline" style="font-weight: 700; color: #0284c7;" onclick="dispararAperturaGaveta()">
-        🔓 Abrir Gaveta Física
-      </button>
-      <div style="display: flex; gap: 0.5rem;">
-        <a href="<?= APP_URL ?>/caja" class="btn btn-outline">Ir a Módulo Caja</a>
-        <button type="button" class="btn btn-primary" onclick="closeModal('modalEstadoGaveta')">Cerrar</button>
-      </div>
+    <div class="modal-footer" style="justify-content: flex-end; gap: 0.5rem;">
+      <a href="<?= APP_URL ?>/caja" class="btn btn-outline" style="font-weight: 700;">Ir al Módulo de Caja</a>
+      <button type="button" class="btn btn-primary" onclick="closeModal('modalEstadoGaveta')">Cerrar</button>
     </div>
   </div>
 </div>

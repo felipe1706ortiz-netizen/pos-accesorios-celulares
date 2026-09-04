@@ -12,12 +12,6 @@
       Ingrese el monto de dinero base en efectivo con el que inicia operaciones el cajero.
     </p>
 
-    <!-- Botón para abrir gaveta física -->
-    <div style="margin-top: 1.25rem;">
-      <button type="button" class="btn btn-outline btn-sm" onclick="dispararAperturaGaveta()" style="font-weight: 800; color: #0284c7; border-color: #bae6fd; background: #f0f9ff; padding: 0.55rem 1.15rem;">
-        <span>🔓</span> <span>Abrir Gaveta Física (Cajón Monedero)</span>
-      </button>
-    </div>
   </div>
 
   <form action="<?= APP_URL ?>/caja/abrir" method="POST">
