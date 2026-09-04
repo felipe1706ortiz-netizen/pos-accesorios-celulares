@@ -215,7 +215,7 @@ class AuthController extends Controller
 
         // 5. Generar token de verificación de 64 caracteres
         $token = bin2hex(random_bytes(32));
-        $tokenExpira = date('Y-m-d H:i:s', strtotime('+24 hours'));
+        $tokenExpira = date('c', strtotime('+24 hours'));
         $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
         // 6. Insertar usuario en la base de datos
@@ -324,7 +324,7 @@ class AuthController extends Controller
         }
 
         $token = bin2hex(random_bytes(32));
-        $tokenExpira = date('Y-m-d H:i:s', strtotime('+24 hours'));
+        $tokenExpira = date('c', strtotime('+24 hours'));
         $this->usuarioModel->setVerificationToken((int)$user['id'], $token, $tokenExpira);
 
         $mailResult = MailService::sendVerificationEmail($user['email'], $user['nombre'], $token);
@@ -392,9 +392,9 @@ class AuthController extends Controller
             return;
         }
 
-        // Generar token de recuperación de 64 caracteres válido por 2 horas
+        // Generar token de recuperación de 64 caracteres válido por 24 horas
         $token = bin2hex(random_bytes(32));
-        $tokenExpira = date('Y-m-d H:i:s', strtotime('+2 hours'));
+        $tokenExpira = date('c', strtotime('+24 hours'));
         $this->usuarioModel->setPasswordResetToken((int)$user['id'], $token, $tokenExpira);
 
         // Enviar correo de restablecimiento
@@ -446,7 +446,7 @@ class AuthController extends Controller
             $this->render('auth/restablecer_password', [
                 'title'   => 'Enlace Expirado',
                 'status'  => 'expired',
-                'message' => 'El enlace de recuperación ha expirado (validez de 2 horas). Por favor solicita uno nuevo.'
+                'message' => 'El enlace de recuperación ha expirado (validez de 24 horas). Por favor solicita uno nuevo.'
             ], 'auth');
             return;
         }

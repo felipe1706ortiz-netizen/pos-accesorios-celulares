@@ -58,7 +58,7 @@ class MailService
         $appName = defined('APP_NAME') ? APP_NAME : 'POS Celulares & Accesorios';
         $subject = '🔑 Restablece tu contraseña en ' . $appName;
         $htmlBody = self::buildPasswordResetTemplate($toName, $resetUrl, $appName);
-        $altBody = "Hola {$toName},\n\nRecibimos una solicitud para restablecer tu contraseña en {$appName}.\nPara ingresar una nueva contraseña, accede a este enlace:\n{$resetUrl}\n\nEste enlace expira en 2 horas.\n\nSi no realizaste esta solicitud, puedes ignorar este mensaje.";
+        $altBody = "Hola {$toName},\n\nRecibimos una solicitud para restablecer tu contraseña en {$appName}.\nPara ingresar una nueva contraseña, accede a este enlace:\n{$resetUrl}\n\nEste enlace expira en 24 horas.\n\nSi no realizaste esta solicitud, puedes ignorar este mensaje.";
 
         return self::dispatchMail($toEmail, $toName, $subject, $htmlBody, $altBody, 'Enlace de recuperación enviado exitosamente.');
     }
@@ -348,7 +348,7 @@ HTML;
         <a href="{$url}" class="btn-reset" target="_blank">🔑 Restablecer Mi Contraseña</a>
       </div>
 
-      <p style="font-size: 13px; color: #64748b;">Por seguridad, este enlace es válido durante las próximas <strong>2 horas</strong>. Si no solicitaste este cambio, no te preocupes; puedes ignorar este correo y tu contraseña actual seguirá protegida.</p>
+      <p style="font-size: 13px; color: #64748b;">Por seguridad, este enlace es válido durante las próximas <strong>24 horas</strong>. Si no solicitaste este cambio, no te preocupes; puedes ignorar este correo y tu contraseña actual seguirá protegida.</p>
 
       <div class="url-fallback">
         Si el botón no funciona, copia y pega este enlace en tu navegador:<br>
