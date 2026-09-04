@@ -33,6 +33,42 @@ class MailService
         $altBody = "Hola {$toName},\n\nGracias por registrarte en {$appName}.\nPara activar tu cuenta, ingresa al siguiente enlace:\n{$verificationUrl}\n\nEste enlace expira en 24 horas.\n\nDesarrollado por Andres Felipe Ortiz Hurtatiz.";
 
         // --------------------------------------------------------------------------
+        // MÉTODO 0: GMAIL APPS SCRIPT WEBHOOK (HTTPS Puerto 443 - 100% Nativo de Gmail)
+        // --------------------------------------------------------------------------
+        $gmailWebhook = getenv('GMAIL_WEBHOOK_URL') ?: (defined('GMAIL_WEBHOOK_URL') ? GMAIL_WEBHOOK_URL : '');
+        if (!empty($gmailWebhook) && function_exists('curl_init')) {
+            $payload = [
+                'to'        => $toEmail,
+                'to_name'   => $toName,
+                'subject'   => $subject,
+                'html'      => $htmlBody,
+                'text'      => $altBody,
+                'from_name' => $appName
+            ];
+
+            $ch = curl_init(trim($gmailWebhook));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($httpCode >= 200 && $httpCode < 400 && !empty($response)) {
+                return [
+                    'success' => true,
+                    'message' => 'Correo de activación enviado exitosamente a ' . htmlspecialchars($toEmail) . ' desde tu Gmail.'
+                ];
+            } else {
+                error_log("Error Gmail Webhook (HTTP {$httpCode}): " . $response . " | " . $curlError);
+            }
+        }
+
+        // --------------------------------------------------------------------------
         // MÉTODO 1: BREVO REST API (HTTPS Puerto 443 - 100% libre de bloqueos)
         // --------------------------------------------------------------------------
         $brevoApiKey = getenv('BREVO_API_KEY') ?: (defined('BREVO_API_KEY') ? BREVO_API_KEY : '');
