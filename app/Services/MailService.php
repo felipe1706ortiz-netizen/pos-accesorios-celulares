@@ -33,7 +33,54 @@ class MailService
         $altBody = "Hola {$toName},\n\nGracias por registrarte en {$appName}.\nPara activar tu cuenta, ingresa al siguiente enlace:\n{$verificationUrl}\n\nEste enlace expira en 24 horas.\n\nDesarrollado por Andres Felipe Ortiz Hurtatiz.";
 
         // --------------------------------------------------------------------------
-        // MÉTODO 1: RESEND API (HTTPS Puerto 443 - Si está configurado)
+        // MÉTODO 1: BREVO REST API (HTTPS Puerto 443 - 100% libre de bloqueos)
+        // --------------------------------------------------------------------------
+        $brevoApiKey = getenv('BREVO_API_KEY') ?: (defined('BREVO_API_KEY') ? BREVO_API_KEY : '');
+        if (!empty($brevoApiKey) && function_exists('curl_init')) {
+            $senderEmail = getenv('MAIL_FROM_ADDRESS') ?: (defined('MAIL_FROM_ADDRESS') ? MAIL_FROM_ADDRESS : 'posaccesorios@gmail.com');
+            $senderName = getenv('MAIL_FROM_NAME') ?: (defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : $appName);
+
+            $payload = [
+                'sender'      => ['name' => $senderName, 'email' => $senderEmail],
+                'to'          => [['email' => $toEmail, 'name' => $toName]],
+                'subject'     => $subject,
+                'htmlContent' => $htmlBody,
+                'textContent' => $altBody
+            ];
+
+            $ch = curl_init('https://api.brevo.com/v3/smtp/email');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'api-key: ' . trim($brevoApiKey),
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ]);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($httpCode >= 200 && $httpCode < 300) {
+                return [
+                    'success' => true,
+                    'message' => 'Correo de activación enviado exitosamente a ' . htmlspecialchars($toEmail) . ' vía Brevo API.'
+                ];
+            } else {
+                $errJson = json_decode($response, true);
+                $errMsg = $errJson['message'] ?? ($curlError ?: 'Error HTTP ' . $httpCode);
+                error_log("Error Brevo API (HTTP {$httpCode}): " . $response . " | " . $curlError);
+                return [
+                    'success' => false,
+                    'message' => 'Error Brevo API (' . htmlspecialchars($errMsg) . ')'
+                ];
+            }
+        }
+
+        // --------------------------------------------------------------------------
+        // MÉTODO 2: RESEND API (HTTPS Puerto 443 - Si está configurado)
         // --------------------------------------------------------------------------
         $resendApiKey = getenv('RESEND_API_KEY') ?: (defined('RESEND_API_KEY') ? RESEND_API_KEY : '');
         if (!empty($resendApiKey) && function_exists('curl_init')) {
