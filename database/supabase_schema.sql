@@ -252,3 +252,31 @@ INSERT INTO configuracion (clave, valor, descripcion) VALUES
 ('impuesto_porcentaje', '0.00', 'Porcentaje de impuesto incluido (0% si es régimen simplificado)'),
 ('ticket_pie_pagina', '¡Gracias por su compra! Garantía de 30 días en accesorios por defectos de fábrica.', 'Mensaje final en el ticket de venta')
 ON CONFLICT (clave) DO UPDATE SET valor = EXCLUDED.valor;
+
+-- ------------------------------------------------------------------------------
+-- 10. TABLA: pedidos (Encargos y solicitudes especiales de clientes)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS pedidos (
+  id SERIAL PRIMARY KEY,
+  codigo VARCHAR(30) NOT NULL UNIQUE,
+  cliente_nombre VARCHAR(120) NOT NULL,
+  cliente_telefono VARCHAR(40) NOT NULL,
+  cliente_documento VARCHAR(40) NULL,
+  producto_id INT NULL REFERENCES productos(id) ON UPDATE CASCADE ON DELETE SET NULL,
+  descripcion TEXT NOT NULL,
+  cantidad INT NOT NULL DEFAULT 1,
+  precio_total NUMERIC(12, 2) NOT NULL DEFAULT 0.00,
+  abono NUMERIC(12, 2) NOT NULL DEFAULT 0.00,
+  saldo_pendiente NUMERIC(12, 2) NOT NULL DEFAULT 0.00,
+  metodo_pago_abono VARCHAR(30) NOT NULL DEFAULT 'EFECTIVO',
+  estado VARCHAR(30) NOT NULL DEFAULT 'PENDIENTE',
+  fecha_entrega_estimada DATE NULL,
+  notas TEXT NULL,
+  usuario_id INT NOT NULL REFERENCES usuarios(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_pedidos_estado ON pedidos (estado);
+CREATE INDEX IF NOT EXISTS idx_pedidos_cliente ON pedidos (cliente_nombre, cliente_telefono);
+CREATE INDEX IF NOT EXISTS idx_pedidos_codigo ON pedidos (codigo);

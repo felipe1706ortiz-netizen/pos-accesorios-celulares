@@ -121,5 +121,13 @@ $router->get('/caja/historial', 'CajaController@historial');
 $router->get('/caja/pulso-gaveta', 'CajaController@pulsoGaveta');
 $router->get('/caja/estado-ajax', 'CajaController@estadoGavetaAjax');
 
+// 7. MÓDULO DE PEDIDOS Y ENCARGOS DE CLIENTES
+$router->get('/pedidos', 'PedidoController@index');
+$router->get('/pedidos/nuevo', 'PedidoController@nuevo');
+$router->post('/pedidos/guardar', 'PedidoController@guardar');
+$router->post('/pedidos/cambiar-estado/{id}', 'PedidoController@cambiarEstado');
+$router->post('/pedidos/abonar/{id}', 'PedidoController@abonar');
+$router->get('/pedidos/ticket/{id}', 'PedidoController@ticket');
+
 // Despachar la petición actual
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
