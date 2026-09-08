@@ -25,3 +25,7 @@ scratch/
 # Dependencies
 vendor/
 node_modules/
+
+# Local Notes & Prompts
+*.docx
+*Acceso*.txt

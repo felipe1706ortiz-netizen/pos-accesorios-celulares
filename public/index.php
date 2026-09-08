@@ -82,6 +82,8 @@ $router->post('/restablecer-password', 'AuthController@restablecerPassword');
 
 // 2. DASHBOARD / RESUMEN GENERAL (ADMIN)
 $router->get('/dashboard', 'DashboardController@index');
+$router->get('/dashboard/data', 'DashboardController@apiData');
+$router->get('/dashboard/reporte-pdf', 'DashboardController@reportePdf');
 
 // 3. MÓDULO POS (CORE FACTURACIÓN Y VENTA RÁPIDA)
 $router->get('/pos', 'PosController@index');
