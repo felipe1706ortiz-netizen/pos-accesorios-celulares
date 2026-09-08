@@ -3,56 +3,18 @@
      ============================================================================== -->
 
 <?php if (!$sesion): ?>
-  <!-- ESTADO: SIN SESIÓN DE CAJA ABIERTA -->
-  <div class="card" style="text-align: center; padding: 3.5rem 2rem; max-width: 580px; margin: 2rem auto;">
-    <div style="font-size: 3.5rem; margin-bottom: 0.75rem;">🔒</div>
-    <h2 style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem; letter-spacing: -0.02em;">
-      No hay ninguna sesión de caja abierta
-    </h2>
-    <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6;">
-      Para comenzar a facturar en el POS y registrar movimientos de efectivo, abra un nuevo turno indicando el fondo inicial.
-    </p>
+  <?php require __DIR__ . '/apertura.php'; return; ?>
+<?php endif; ?>
 
-    <form action="<?= APP_URL ?>/caja/abrir" method="POST" style="max-width: 420px; margin: 0 auto; text-align: left;">
-      <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
-
-      <div class="form-group">
-        <label class="form-label" for="monto_inicial" style="font-weight: 800; font-size: 1rem;">Base / Fondo Inicial en Efectivo ($):</label>
-        <input 
-          type="number" 
-          step="100" 
-          min="0" 
-          id="monto_inicial" 
-          name="monto_inicial" 
-          class="form-control form-control-lg" 
-          style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 800;"
-          placeholder="ej: 100000" 
-          value="0" 
-          required 
-          autofocus
-        >
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="notas_apertura">Notas u Observaciones (Opcional):</label>
-        <input type="text" id="notas_apertura" name="notas" class="form-control" placeholder="ej: Turno mañana...">
-      </div>
-
-      <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top: 1.25rem;">
-        <span>🔓</span> <span>Abrir Turno de Caja</span>
-      </button>
-    </form>
-  </div>
-
-<?php else: 
-  // ESTADO: SESIÓN DE CAJA ACTIVA
-  $montoInicial = (float)$sesion['monto_inicial'];
-  $ventasEf = (float)$sesion['total_ventas_efectivo'];
-  $ventasTarj = (float)$sesion['total_ventas_tarjeta'];
-  $ventasTransf = (float)$sesion['total_ventas_transferencia'];
-  $entradas = (float)$sesion['total_entradas'];
-  $salidas = (float)$sesion['total_salidas'];
-  $saldoEsperado = (float)$sesion['monto_esperado'];
+<?php
+// ESTADO: SESIÓN DE CAJA ACTIVA
+$montoInicial = (float)$sesion['monto_inicial'];
+$ventasEf = (float)$sesion['total_ventas_efectivo'];
+$ventasTarj = (float)$sesion['total_ventas_tarjeta'];
+$ventasTransf = (float)$sesion['total_ventas_transferencia'];
+$entradas = (float)$sesion['total_entradas'];
+$salidas = (float)$sesion['total_salidas'];
+$saldoEsperado = (float)$sesion['monto_esperado'];
 ?>
 
   <!-- CABECERA DEL TURNO ACTIVO -->
@@ -229,8 +191,6 @@
       </table>
     </div>
   </div>
-
-<?php endif; ?>
 
 <!-- ==============================================================================
      MODAL: REGISTRAR ENTRADA O SALIDA DE EFECTIVO (MÓDULO 5)

@@ -57,9 +57,9 @@
     </div>
 
     <div style="display: flex; gap: 0.85rem; margin-top: 1.5rem;">
-      <a href="<?= APP_URL ?>/caja" class="btn btn-outline" style="flex: 1; font-weight: 700;">
+      <button type="button" onclick="abrirModalEstadoGaveta()" class="btn btn-outline" style="flex: 1; font-weight: 700;">
         <span>💵</span> <span>Ver Caja</span>
-      </a>
+      </button>
       <button type="submit" class="btn btn-primary btn-lg" style="flex: 2; font-weight: 800;">
         <span>🔓</span> <span>Confirmar y Entrar al POS</span>
       </button>

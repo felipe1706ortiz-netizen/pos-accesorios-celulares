@@ -44,10 +44,13 @@ class CajaController extends Controller
             $sesionActiva = $this->sesionModel->getCualquierSesionAbierta();
         }
 
-        $movimientos = [];
-        if ($sesionActiva) {
-            $movimientos = $this->movimientoModel->getPorSesion((int)$sesionActiva['id']);
+        // Si no hay sesión de caja abierta, redirigir a la vista única oficial de Apertura de Turno
+        if (!$sesionActiva) {
+            $this->redirect('/caja/apertura');
+            return;
         }
+
+        $movimientos = $this->movimientoModel->getPorSesion((int)$sesionActiva['id']);
 
         $historialSesiones = $this->sesionModel->getHistorial(10);
         $config = $this->configModel->getMapaConfiguracion();
