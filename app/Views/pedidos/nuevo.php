@@ -195,7 +195,7 @@
             </label>
             <input 
               type="number" 
-              step="100" 
+              step="any" 
               min="0" 
               id="precio_total" 
               name="precio_total" 
@@ -214,7 +214,7 @@
             </label>
             <input 
               type="number" 
-              step="100" 
+              step="any" 
               min="0" 
               id="abono" 
               name="abono" 

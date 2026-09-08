@@ -51,6 +51,7 @@ function abrirModalAbonar(id, codigo, saldoPendiente) {
   const titulo = document.getElementById('modalAbonarTitulo');
   const displaySaldo = document.getElementById('modalSaldoPendienteDisplay');
   const inputMonto = document.getElementById('monto_abono');
+  const btnPagarTodo = document.getElementById('btnPagarTodoAbono');
 
   if (form) {
     form.action = `${window.APP_URL}/pedidos/abonar/${id}`;
@@ -60,13 +61,26 @@ function abrirModalAbonar(id, codigo, saldoPendiente) {
     titulo.textContent = `Abonar a Pedido #${codigo}`;
   }
 
+  const saldoNum = Number(saldoPendiente || 0);
+
   if (displaySaldo) {
-    displaySaldo.textContent = `$ ${Number(saldoPendiente || 0).toLocaleString('es-CO')}`;
+    displaySaldo.textContent = `$ ${saldoNum.toLocaleString('es-CO')}`;
+  }
+
+  if (btnPagarTodo) {
+    btnPagarTodo.onclick = function() {
+      if (inputMonto) {
+        inputMonto.value = saldoNum;
+        inputMonto.focus();
+      }
+    };
   }
 
   if (inputMonto) {
     inputMonto.value = '';
-    inputMonto.max = saldoPendiente;
+    inputMonto.step = 'any';
+    inputMonto.min = '0.01';
+    inputMonto.max = saldoNum;
     setTimeout(() => inputMonto.focus(), 150);
   }
 

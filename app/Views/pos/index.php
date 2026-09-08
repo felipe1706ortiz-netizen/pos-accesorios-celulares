@@ -191,7 +191,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label" for="descuentoValor" style="font-weight: 800;">Valor de Descuento ($)</label>
-        <input type="number" min="0" step="100" id="descuentoValor" class="form-control form-control-lg" style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 800;" placeholder="0" autofocus>
+        <input type="number" min="0" step="any" id="descuentoValor" class="form-control form-control-lg" style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 800;" placeholder="0" autofocus>
       </div>
     </div>
 

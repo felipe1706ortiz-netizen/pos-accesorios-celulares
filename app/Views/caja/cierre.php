@@ -152,7 +152,7 @@
           <label class="form-label" for="monto_real" style="font-weight: 800; font-size: 1.05rem;">Total Efectivo Contado en Gaveta ($) *</label>
           <input 
             type="number" 
-            step="100" 
+            step="any" 
             min="0" 
             id="monto_real" 
             name="monto_real" 

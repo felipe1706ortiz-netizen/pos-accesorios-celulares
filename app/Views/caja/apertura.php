@@ -21,7 +21,7 @@
       <label class="form-label" for="monto_inicial" style="font-weight: 800; font-size: 1.05rem;">Monto / Fondo Inicial ($) *</label>
       <input 
         type="number" 
-        step="100" 
+        step="any" 
         min="0" 
         id="monto_inicial" 
         name="monto_inicial" 

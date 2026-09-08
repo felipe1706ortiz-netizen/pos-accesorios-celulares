@@ -135,7 +135,7 @@
 
         <div class="form-group">
           <label class="form-label" for="mov_monto" style="font-weight: 800;">Monto ($) *</label>
-          <input type="number" step="100" min="1" id="mov_monto" name="monto" class="form-control form-control-lg" style="font-family: 'JetBrains Mono', monospace; font-weight: 800;" placeholder="ej: 50000" required autofocus>
+          <input type="number" step="any" min="0.01" id="mov_monto" name="monto" class="form-control form-control-lg" style="font-family: 'JetBrains Mono', monospace; font-weight: 800;" placeholder="ej: 50000" required autofocus>
         </div>
 
         <div class="form-group">

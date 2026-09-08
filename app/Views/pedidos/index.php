@@ -343,13 +343,18 @@
     <form id="formAbonarPedido" method="POST">
       <div class="modal-body">
         
-        <div style="background: var(--bg-muted); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.88rem;">
-          Saldo Restante Pendiente: <strong id="modalSaldoPendienteDisplay" style="color: var(--danger); font-family: 'JetBrains Mono', monospace; font-size: 1.15rem; font-weight: 900;">$ 0</strong>
+        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-muted); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.88rem;">
+          <div>
+            Saldo Restante Pendiente: <strong id="modalSaldoPendienteDisplay" style="color: var(--danger); font-family: 'JetBrains Mono', monospace; font-size: 1.15rem; font-weight: 900;">$ 0</strong>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline" id="btnPagarTodoAbono" style="font-size: 0.8rem; font-weight: 700; padding: 0.3rem 0.65rem;" title="Llenar con el total pendiente">
+            ⚡ Saldo Total
+          </button>
         </div>
 
         <div class="form-group" style="margin-bottom: 1.25rem;">
           <label class="form-label" for="monto_abono" style="font-weight: 800;">Monto a Abonar ($) *</label>
-          <input type="number" step="100" min="1" id="monto_abono" name="monto_abono" class="form-control form-control-lg" style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 900; color: #047857;" required autofocus>
+          <input type="number" step="any" min="0.01" id="monto_abono" name="monto_abono" class="form-control form-control-lg" style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 900; color: #047857;" placeholder="0" required autofocus>
         </div>
 
         <div class="form-group">
