@@ -306,4 +306,17 @@ class InventarioController extends Controller
         $productos = $this->productoModel->getListado($q, $cat, $status);
         $this->jsonResponse(['success' => true, 'productos' => $productos]);
     }
+
+    /**
+     * Devuelve el listado de categorías activas (JSON para AJAX o redirección a inventario)
+     */
+    public function categorias(): void
+    {
+        $categorias = $this->categoriaModel->getActivas();
+        if ($this->isAjax()) {
+            $this->jsonResponse(['success' => true, 'categorias' => $categorias]);
+            return;
+        }
+        $this->redirect('/inventario');
+    }
 }
