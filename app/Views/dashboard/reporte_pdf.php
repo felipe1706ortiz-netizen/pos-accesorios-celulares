@@ -6,7 +6,7 @@
   <title>Reporte_<?= ucfirst($tipo) ?>_<?= ($tipo === 'mensual') ? $mes : $fecha ?>_<?= APP_NAME ?></title>
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
     @page {
       size: A4 portrait;
@@ -20,7 +20,7 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 11px;
       color: #1e293b;
       background: #f1f5f9;
@@ -322,10 +322,10 @@
     </div>
     <div style="display: flex; gap: 8px;">
       <button type="button" onclick="descargarPDFDirecto()" id="btnDescargarPDF" class="action-btn action-btn-primary">
-        📥 Descargar PDF
+        Descargar PDF
       </button>
       <button type="button" onclick="window.print()" class="action-btn action-btn-outline">
-        🖨️ Imprimir
+        Imprimir
       </button>
     </div>
   </div>
@@ -385,7 +385,7 @@
     </div>
 
     <!-- ESTADO FINANCIERO CONSOLIDADO (P&L) -->
-    <div class="section-title">📊 Balance Financiero del Período</div>
+    <div class="section-title">Balance Financiero del Período</div>
     <div class="pnl-container">
       <div class="pnl-box">
         <div style="font-weight: 700; font-size: 10px; color: #475569; margin-bottom: 6px; text-transform: uppercase;">
@@ -433,7 +433,7 @@
     </div>
 
     <!-- PRODUCTOS MÁS VENDIDOS -->
-    <div class="section-title">🏆 Top Productos Más Vendidos</div>
+    <div class="section-title">Top Productos Más Vendidos</div>
     <?php if (!empty($reporte['masVendidos'])): ?>
       <table class="data-table">
         <thead>
@@ -473,7 +473,7 @@
     <?php endif; ?>
 
     <!-- PRODUCTOS MENOS VENDIDOS / SIN ROTACIÓN -->
-    <div class="section-title">⚠️ Productos con Menor Rotación (Alerta de Stock)</div>
+    <div class="section-title">Productos con Menor Rotación (Alerta de Stock)</div>
     <?php if (!empty($reporte['menosVendidos'])): ?>
       <table class="data-table">
         <thead>
@@ -530,7 +530,7 @@
     function descargarPDFDirecto() {
       const btn = document.getElementById('btnDescargarPDF');
       const originalText = btn.innerHTML;
-      btn.innerHTML = '⏳ Generando...';
+      btn.innerHTML = 'Generando...';
       btn.disabled = true;
 
       const element = document.getElementById('reportContent');

@@ -1,5 +1,5 @@
 <!-- ==============================================================================
-     VISTA: DASHBOARD ANALÍTICO & CENTRO DE INTELIGENCIA POS (UI/UX PRO MAX)
+     VISTA: DASHBOARD ANALÍTICO & CENTRO DE INTELIGENCIA POS (Sober SaaS)
      ============================================================================== -->
 
 <!-- INYECCIÓN DE DATOS PARA GRÁFICOS INTERACTIVOS (CHART.JS) -->
@@ -8,51 +8,79 @@
 </script>
 
 <!-- ==============================================================================
-     1. BARRA DE CONTROL DE PERÍODO Y EXPORTACIÓN A PDF
+     1. BARRA DE CONTROL DE PERÍODO Y EXPORTACIÓN
      ============================================================================== -->
-<div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem 1.5rem; border-top: 4px solid var(--primary); background: #ffffff;">
+<div class="panel" style="margin-bottom: 1.25rem; padding: 1rem 1.25rem;">
   <form id="formFiltroPeriodo" method="GET" action="<?= APP_URL ?>/dashboard" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;">
     
     <!-- Selector de Tipo de Reporte (Segmented Switch) -->
-    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-      <div style="display: inline-flex; background: var(--bg-muted); padding: 4px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-        <label style="display: flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; <?= $tipo === 'diario' ? 'background: #ffffff; color: var(--primary); box-shadow: var(--shadow-sm);' : 'color: var(--text-muted);' ?>">
+    <div style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;">
+      <div style="display: inline-flex; background: var(--bg-muted); padding: 3px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <label style="display: flex; align-items: center; gap: 0.35rem; padding: 0.4rem 0.85rem; border-radius: var(--radius-xs); font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: all var(--transition-fast); <?= $tipo === 'diario' ? 'background: #ffffff; color: var(--text-main); box-shadow: var(--shadow-xs);' : 'color: var(--text-muted);' ?>">
           <input type="radio" name="tipo" value="diario" id="radTipoDiario" <?= $tipo === 'diario' ? 'checked' : '' ?> style="display:none;">
-          <span>☀️ Reporte Diario</span>
+          <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span>Diario</span>
         </label>
         
-        <label style="display: flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; <?= $tipo === 'mensual' ? 'background: #ffffff; color: var(--primary); box-shadow: var(--shadow-sm);' : 'color: var(--text-muted);' ?>">
+        <label style="display: flex; align-items: center; gap: 0.35rem; padding: 0.4rem 0.85rem; border-radius: var(--radius-xs); font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: all var(--transition-fast); <?= $tipo === 'mensual' ? 'background: #ffffff; color: var(--text-main); box-shadow: var(--shadow-xs);' : 'color: var(--text-muted);' ?>">
           <input type="radio" name="tipo" value="mensual" id="radTipoMensual" <?= $tipo === 'mensual' ? 'checked' : '' ?> style="display:none;">
-          <span>📅 Reporte Mensual</span>
+          <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Mensual</span>
         </label>
       </div>
 
       <!-- Selector de Fecha (Diario) -->
-      <div id="groupFiltroDiario" style="display: <?= $tipo === 'diario' ? 'flex' : 'none' ?>; align-items: center; gap: 0.5rem;">
-        <input type="date" name="fecha" id="inputFechaFiltro" value="<?= htmlspecialchars($fecha) ?>" class="form-control" style="font-weight: 700; font-size: 0.9rem; padding: 0.45rem 0.8rem; width: auto; font-family: 'JetBrains Mono', monospace;">
-        <button type="button" class="btn btn-outline btn-sm" onclick="setFechaFiltro('hoy')" style="font-weight: 700;">Hoy</button>
-        <button type="button" class="btn btn-outline btn-sm" onclick="setFechaFiltro('ayer')" style="font-weight: 700;">Ayer</button>
+      <div id="groupFiltroDiario" style="display: <?= $tipo === 'diario' ? 'flex' : 'none' ?>; align-items: center; gap: 0.4rem;">
+        <input type="date" name="fecha" id="inputFechaFiltro" value="<?= htmlspecialchars($fecha) ?>" class="form-control" style="font-size: 0.85rem; padding: 0.38rem 0.75rem; width: auto;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="setFechaFiltro('hoy')">Hoy</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="setFechaFiltro('ayer')">Ayer</button>
       </div>
 
       <!-- Selector de Mes (Mensual) -->
-      <div id="groupFiltroMensual" style="display: <?= $tipo === 'mensual' ? 'flex' : 'none' ?>; align-items: center; gap: 0.5rem;">
-        <input type="month" name="mes" id="inputMesFiltro" value="<?= htmlspecialchars($mes) ?>" class="form-control" style="font-weight: 700; font-size: 0.9rem; padding: 0.45rem 0.8rem; width: auto; font-family: 'JetBrains Mono', monospace;">
-        <button type="button" class="btn btn-outline btn-sm" onclick="setMesActual()" style="font-weight: 700;">Mes Actual</button>
+      <div id="groupFiltroMensual" style="display: <?= $tipo === 'mensual' ? 'flex' : 'none' ?>; align-items: center; gap: 0.4rem;">
+        <input type="month" name="mes" id="inputMesFiltro" value="<?= htmlspecialchars($mes) ?>" class="form-control" style="font-size: 0.85rem; padding: 0.38rem 0.75rem; width: auto;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="setMesActual()">Mes Actual</button>
       </div>
     </div>
 
     <!-- Acciones de Descarga e Impresión -->
-    <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
-      <span class="badge badge-info" style="font-size: 0.85rem; padding: 0.45rem 0.75rem; border-radius: var(--radius-sm);">
-        📍 <?= htmlspecialchars($reporte['metricas']['rango']['etiqueta']) ?>
+    <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+      <span class="badge badge-neutral" style="font-size: 0.82rem; padding: 0.4rem 0.65rem;">
+        <?= htmlspecialchars($reporte['metricas']['rango']['etiqueta']) ?>
       </span>
       
-      <button type="button" class="btn btn-primary btn-sm" onclick="abrirDescargaPDF()" title="Generar informe en PDF" style="font-weight: 700; display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem;">
-        <span>📄</span> <span>Descargar PDF</span>
+      <button type="button" class="btn btn-primary btn-sm" onclick="abrirDescargaPDF()" title="Generar informe en PDF">
+        <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        <span>Descargar PDF</span>
       </button>
 
-      <a href="<?= APP_URL ?>/dashboard/reporte-pdf?tipo=<?= $tipo ?>&fecha=<?= $fecha ?>&mes=<?= $mes ?>" target="_blank" class="btn btn-outline btn-sm" title="Vista preliminar de impresión A4" style="font-weight: 700; display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem;">
-        <span>🖨️</span> <span>Imprimir</span>
+      <a href="<?= APP_URL ?>/dashboard/reporte-pdf?tipo=<?= $tipo ?>&fecha=<?= $fecha ?>&mes=<?= $mes ?>" target="_blank" class="btn btn-outline btn-sm" title="Vista preliminar de impresión">
+        <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        <span>Imprimir</span>
       </a>
     </div>
 
@@ -60,113 +88,52 @@
 </div>
 
 <!-- ==============================================================================
-     2. TARJETAS KPI FINANCIERAS Y OPERACIONALES (RESUMEN EJECUTIVO)
+     2. FRANJA MÉTRICA CONTINUA DE KPIs (SOBER SAAS METRIC STRIP)
      ============================================================================== -->
-<div class="kpi-grid" style="margin-bottom: 1.5rem;">
+<div class="metric-strip">
   
-  <!-- Tarjeta 1: Ventas Totales -->
-  <div class="kpi-card" style="border-left: 4px solid var(--primary);">
-    <div class="kpi-icon primary">
-      <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    </div>
-    <div class="kpi-details">
-      <div class="kpi-label">Ventas Totales (<?= ucfirst($tipo) ?>)</div>
-      <div class="kpi-value" style="color: var(--primary);">$ <?= number_format($reporte['metricas']['total_ventas'], 0, ',', '.') ?></div>
-      <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">
-        <strong><?= $reporte['metricas']['total_facturas'] ?></strong> facturas emitidas
-      </div>
-    </div>
+  <div class="metric-cell">
+    <div class="metric-cell-label">Ventas Totales (<?= ucfirst($tipo) ?>)</div>
+    <div class="metric-cell-value">$ <?= number_format($reporte['metricas']['total_ventas'], 0, ',', '.') ?></div>
+    <div class="metric-cell-sub"><strong><?= $reporte['metricas']['total_facturas'] ?></strong> facturas emitidas</div>
   </div>
 
-  <!-- Tarjeta 2: Ganancia Neta / Utilidad -->
-  <div class="kpi-card" style="border-left: 4px solid var(--success);">
-    <div class="kpi-icon success">
-      <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-    </div>
-    <div class="kpi-details">
-      <div class="kpi-label">Ganancia Neta (Utilidad)</div>
-      <div class="kpi-value" style="color: var(--success);">$ <?= number_format($reporte['metricas']['ganancia_neta'], 0, ',', '.') ?></div>
-      <div style="font-size: 0.78rem; color: #047857; margin-top: 0.2rem; font-weight: 700;">
-        Margen Comercial: <?= $reporte['metricas']['margen_porcentaje'] ?>%
-      </div>
-    </div>
+  <div class="metric-cell">
+    <div class="metric-cell-label">Ganancia Neta</div>
+    <div class="metric-cell-value" style="color: var(--success);">$ <?= number_format($reporte['metricas']['ganancia_neta'], 0, ',', '.') ?></div>
+    <div class="metric-cell-sub">Margen: <strong><?= $reporte['metricas']['margen_porcentaje'] ?>%</strong></div>
   </div>
 
-  <!-- Tarjeta 3: Costo de Mercancía (COGS) -->
-  <div class="kpi-card" style="border-left: 4px solid var(--warning);">
-    <div class="kpi-icon warning">
-      <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z"/></svg>
-    </div>
-    <div class="kpi-details">
-      <div class="kpi-label">Costo de Compra (COGS)</div>
-      <div class="kpi-value" style="color: #b45309;">$ <?= number_format($reporte['metricas']['costo_total'], 0, ',', '.') ?></div>
-      <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">
-        <strong><?= $reporte['metricas']['total_unidades'] ?></strong> unidades despachadas
-      </div>
-    </div>
+  <div class="metric-cell">
+    <div class="metric-cell-label">Costo Mercancía (COGS)</div>
+    <div class="metric-cell-value">$ <?= number_format($reporte['metricas']['costo_total'], 0, ',', '.') ?></div>
+    <div class="metric-cell-sub"><strong><?= $reporte['metricas']['total_unidades'] ?></strong> unidades despachadas</div>
   </div>
 
-  <!-- Tarjeta 4: Pérdidas / Facturas Anuladas -->
-  <div class="kpi-card" style="border-left: 4px solid var(--danger);">
-    <div class="kpi-icon danger">
-      <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+  <div class="metric-cell">
+    <div class="metric-cell-label">Anulaciones / Pérdidas</div>
+    <div class="metric-cell-value" style="color: <?= $reporte['metricas']['perdidas_anulaciones'] > 0 ? 'var(--danger)' : 'var(--text-muted)' ?>;">
+      $ <?= number_format($reporte['metricas']['perdidas_anulaciones'], 0, ',', '.') ?>
     </div>
-    <div class="kpi-details">
-      <div class="kpi-label">Pérdidas (Anulaciones)</div>
-      <div class="kpi-value" style="color: <?= $reporte['metricas']['perdidas_anulaciones'] > 0 ? 'var(--danger)' : 'var(--text-muted)' ?>;">
-        $ <?= number_format($reporte['metricas']['perdidas_anulaciones'], 0, ',', '.') ?>
-      </div>
-      <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">
-        <strong><?= $reporte['metricas']['facturas_anuladas'] ?></strong> facturas anuladas
-      </div>
-    </div>
+    <div class="metric-cell-sub"><strong><?= $reporte['metricas']['facturas_anuladas'] ?></strong> facturas anuladas</div>
   </div>
 
-</div>
-
-<!-- Tarjetas secundarias: Ticket promedio y Cobros -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
-  
-  <div class="card" style="padding: 1.1rem 1.4rem; display: flex; align-items: center; justify-content: space-between;">
-    <div>
-      <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.4px;">
-        Ticket Promedio de Venta
-      </div>
-      <div style="font-size: 1.35rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-main); margin-top: 0.2rem;">
-        $ <?= number_format($reporte['metricas']['ticket_promedio'], 0, ',', '.') ?>
-      </div>
-    </div>
-    <div style="width: 44px; height: 44px; border-radius: 10px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
-      🎯
-    </div>
+  <div class="metric-cell">
+    <div class="metric-cell-label">Ticket Promedio</div>
+    <div class="metric-cell-value">$ <?= number_format($reporte['metricas']['ticket_promedio'], 0, ',', '.') ?></div>
+    <div class="metric-cell-sub">Por transacción</div>
   </div>
 
-  <div class="card" style="padding: 1.1rem 1.4rem; display: flex; align-items: center; justify-content: space-between;">
-    <div>
-      <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.4px;">
-        Cobrado en Efectivo
-      </div>
-      <div style="font-size: 1.35rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #047857; margin-top: 0.2rem;">
-        $ <?= number_format($reporte['metricas']['ventas_efectivo'], 0, ',', '.') ?>
-      </div>
-    </div>
-    <div style="width: 44px; height: 44px; border-radius: 10px; background: var(--success-light); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
-      💵
-    </div>
+  <div class="metric-cell">
+    <div class="metric-cell-label">Efectivo en Gaveta</div>
+    <div class="metric-cell-value">$ <?= number_format($reporte['metricas']['ventas_efectivo'], 0, ',', '.') ?></div>
+    <div class="metric-cell-sub">Cobros en efectivo</div>
   </div>
 
-  <div class="card" style="padding: 1.1rem 1.4rem; display: flex; align-items: center; justify-content: space-between;">
-    <div>
-      <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.4px;">
-        Tarjetas & Transferencias
-      </div>
-      <div style="font-size: 1.35rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--secondary); margin-top: 0.2rem;">
-        $ <?= number_format($reporte['metricas']['ventas_tarjeta'] + $reporte['metricas']['ventas_transferencia'], 0, ',', '.') ?>
-      </div>
-    </div>
-    <div style="width: 44px; height: 44px; border-radius: 10px; background: var(--secondary-light); color: var(--secondary); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
-      💳
-    </div>
+  <div class="metric-cell">
+    <div class="metric-cell-label">Tarjetas & Transferencias</div>
+    <div class="metric-cell-value">$ <?= number_format($reporte['metricas']['ventas_tarjeta'] + $reporte['metricas']['ventas_transferencia'], 0, ',', '.') ?></div>
+    <div class="metric-cell-sub">Cobros electrónicos</div>
   </div>
 
 </div>
@@ -174,60 +141,71 @@
 <!-- ==============================================================================
      3. ZONA DE GRÁFICOS ANALÍTICOS (CHART.JS)
      ============================================================================== -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;">
   
   <!-- Gráfico 1: Tendencia de Ventas y Ganancias -->
-  <div class="card">
-    <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.85rem;">
-      <h3 class="card-title">
-        <svg style="width: 20px; height: 20px; color: var(--primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
-        <span>Tendencia de Ventas & Ganancias (<?= $tipo === 'mensual' ? 'Por Día del Mes' : 'Por Hora' ?>)</span>
-      </h3>
-      <span class="badge badge-primary"><?= ucfirst($tipo) ?></span>
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Tendencia de Ventas & Ganancias (<?= $tipo === 'mensual' ? 'Por Día' : 'Por Hora' ?>)</span>
+      </div>
+      <span class="badge badge-neutral"><?= ucfirst($tipo) ?></span>
     </div>
-    <div style="position: relative; height: 300px; margin-top: 1rem;">
+    <div style="position: relative; height: 280px; margin-top: 0.5rem;">
       <canvas id="chartVentas"></canvas>
     </div>
   </div>
 
   <!-- Gráfico 2: Ganancias vs Costos y Pérdidas -->
-  <div class="card">
-    <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.85rem;">
-      <h3 class="card-title">
-        <svg style="width: 20px; height: 20px; color: var(--success);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
         <span>Balance de Ganancias vs Costos & Pérdidas</span>
-      </h3>
+      </div>
       <span class="badge badge-success">Rentabilidad</span>
     </div>
-    <div style="position: relative; height: 300px; margin-top: 1rem;">
+    <div style="position: relative; height: 280px; margin-top: 0.5rem;">
       <canvas id="chartGananciasPerdidas"></canvas>
     </div>
   </div>
 
   <!-- Gráfico 3: Distribución por Categorías -->
-  <div class="card">
-    <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.85rem;">
-      <h3 class="card-title">
-        <svg style="width: 20px; height: 20px; color: var(--accent);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+          <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+        </svg>
         <span>Ventas por Categoría de Accesorios</span>
-      </h3>
-      <span class="badge badge-info">Mix de Catálogo</span>
+      </div>
+      <span class="badge badge-neutral">Categorías</span>
     </div>
-    <div style="position: relative; height: 280px; margin-top: 1rem;">
+    <div style="position: relative; height: 260px; margin-top: 0.5rem;">
       <canvas id="chartCategorias"></canvas>
     </div>
   </div>
 
   <!-- Gráfico 4: Participación de Productos Estrella -->
-  <div class="card">
-    <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.85rem;">
-      <h3 class="card-title">
-        <svg style="width: 20px; height: 20px; color: var(--secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        <span>Top Productos por Ingresos ($ COP)</span>
-      </h3>
-      <span class="badge badge-warning">Líderes de Ventas</span>
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span>Top Productos por Ingresos</span>
+      </div>
+      <span class="badge badge-neutral">Líderes</span>
     </div>
-    <div style="position: relative; height: 280px; margin-top: 1rem;">
+    <div style="position: relative; height: 260px; margin-top: 0.5rem;">
       <canvas id="chartTopProductos"></canvas>
     </div>
   </div>
@@ -235,26 +213,29 @@
 </div>
 
 <!-- ==============================================================================
-     4. RANKINGS DE PRODUCTOS: MÁS VENDIDOS Y MENOS VENDIDOS (DUAL GRID)
+     4. RANKINGS DE PRODUCTOS: MÁS VENDIDOS Y MENOS VENDIDOS
      ============================================================================== -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;">
   
   <!-- TABLA 1: PRODUCTOS MÁS VENDIDOS -->
-  <div class="card">
-    <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.85rem;">
-      <h3 class="card-title">
-        <span style="font-size: 1.2rem;">🏆</span>
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+          <polyline points="17 6 23 6 23 12"></polyline>
+        </svg>
         <span>Productos Más Vendidos</span>
-      </h3>
+      </div>
       <span class="badge badge-success">Top <?= count($reporte['masVendidos']) ?></span>
     </div>
 
-    <div style="overflow-x: auto; margin-top: 0.5rem;">
+    <div style="overflow-x: auto;">
       <?php if (!empty($reporte['masVendidos'])): ?>
         <table class="table" style="font-size: 0.85rem; width: 100%;">
           <thead>
             <tr>
-              <th style="width: 5%;">#</th>
+              <th style="width: 40px;">#</th>
               <th>Producto / Categoría</th>
               <th style="text-align: center;">Vendidos</th>
               <th style="text-align: right;">Total Venta</th>
@@ -265,36 +246,28 @@
           <tbody>
             <?php foreach ($reporte['masVendidos'] as $idx => $prod): ?>
               <tr>
-                <td>
-                  <?php if ($idx === 0): ?>
-                    <span style="font-size: 1.1rem;" title="1er Lugar">🥇</span>
-                  <?php elseif ($idx === 1): ?>
-                    <span style="font-size: 1.1rem;" title="2do Lugar">🥈</span>
-                  <?php elseif ($idx === 2): ?>
-                    <span style="font-size: 1.1rem;" title="3er Lugar">🥉</span>
-                  <?php else: ?>
-                    <span class="badge" style="background: var(--bg-muted); color: var(--text-main);"><?= $idx + 1 ?></span>
-                  <?php endif; ?>
+                <td style="font-weight: 600; color: var(--text-muted); font-variant-numeric: tabular-nums;">
+                  <?= $idx + 1 ?>
                 </td>
                 <td>
-                  <div style="font-weight: 700; color: var(--text-main);"><?= htmlspecialchars($prod['nombre']) ?></div>
-                  <div style="font-size: 0.74rem; color: var(--text-muted); display: flex; gap: 0.5rem;">
+                  <div style="font-weight: 600; color: var(--text-main);"><?= htmlspecialchars($prod['nombre']) ?></div>
+                  <div style="font-size: 0.74rem; color: var(--text-muted); display: flex; gap: 0.4rem;">
                     <span><?= htmlspecialchars($prod['categoria_nombre']) ?></span>
                     <span>&bull;</span>
-                    <span style="font-family: 'JetBrains Mono', monospace;"><?= $prod['codigo_barras'] ?></span>
+                    <span style="font-variant-numeric: tabular-nums;"><?= $prod['codigo_barras'] ?></span>
                   </div>
                 </td>
-                <td style="text-align: center; font-weight: 800; font-family: 'JetBrains Mono', monospace;">
+                <td style="text-align: center; font-weight: 600; font-variant-numeric: tabular-nums;">
                   <?= $prod['total_unidades'] ?>
                 </td>
-                <td style="text-align: right; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--primary);">
+                <td style="text-align: right; font-weight: 600; font-variant-numeric: tabular-nums;">
                   $ <?= number_format($prod['total_ingresos'], 0, ',', '.') ?>
                 </td>
-                <td style="text-align: right; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--success);">
+                <td style="text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--success);">
                   $ <?= number_format($prod['ganancia_total'], 0, ',', '.') ?>
                 </td>
                 <td style="text-align: center;">
-                  <span class="badge <?= $prod['stock'] <= 5 ? 'badge-danger' : 'badge-info' ?>" style="font-size: 0.75rem;">
+                  <span class="badge <?= $prod['stock'] <= 5 ? 'badge-danger' : 'badge-neutral' ?>" style="font-size: 0.75rem;">
                     <?= $prod['stock'] ?>
                   </span>
                 </td>
@@ -304,34 +277,37 @@
         </table>
       <?php else: ?>
         <div style="padding: 2.5rem 1rem; text-align: center; color: var(--text-muted);">
-          <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">📦</div>
-          <div style="font-weight: 700; font-size: 0.95rem;">Sin ventas registradas en este período</div>
-          <div style="font-size: 0.8rem; margin-top: 0.25rem;">Realiza ventas desde el terminal POS para ver el ranking de productos estrella.</div>
+          <div style="font-weight: 600; font-size: 0.92rem;">Sin ventas registradas en este período</div>
+          <div style="font-size: 0.8rem; margin-top: 0.25rem;">Realiza ventas desde el terminal POS para ver el ranking.</div>
         </div>
       <?php endif; ?>
     </div>
   </div>
 
   <!-- TABLA 2: PRODUCTOS MENOS VENDIDOS / SIN ROTACIÓN -->
-  <div class="card">
-    <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.85rem;">
-      <h3 class="card-title">
-        <span style="font-size: 1.2rem;">⚠️</span>
-        <span>Productos con Menor Rotación (Stock Inmovilizado)</span>
-      </h3>
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>Baja Rotación (Stock Inmovilizado)</span>
+      </div>
       <span class="badge badge-warning">Atención</span>
     </div>
 
-    <div style="overflow-x: auto; margin-top: 0.5rem;">
+    <div style="overflow-x: auto;">
       <?php if (!empty($reporte['menosVendidos'])): ?>
         <table class="table" style="font-size: 0.85rem; width: 100%;">
           <thead>
             <tr>
               <th>Producto / Categoría</th>
-              <th style="text-align: center;">Ventas Período</th>
-              <th style="text-align: center;">Stock Detenido</th>
-              <th style="text-align: right;">Costo Compra</th>
-              <th style="text-align: right;">Capital Retenido</th>
+              <th style="text-align: center;">Ventas</th>
+              <th style="text-align: center;">Stock</th>
+              <th style="text-align: right;">Costo</th>
+              <th style="text-align: right;">Capital Detenido</th>
               <th style="text-align: center;">Acción</th>
             </tr>
           </thead>
@@ -339,11 +315,11 @@
             <?php foreach ($reporte['menosVendidos'] as $prod): ?>
               <tr>
                 <td>
-                  <div style="font-weight: 700; color: var(--text-main);"><?= htmlspecialchars($prod['nombre']) ?></div>
-                  <div style="font-size: 0.74rem; color: var(--text-muted); display: flex; gap: 0.5rem;">
+                  <div style="font-weight: 600; color: var(--text-main);"><?= htmlspecialchars($prod['nombre']) ?></div>
+                  <div style="font-size: 0.74rem; color: var(--text-muted); display: flex; gap: 0.4rem;">
                     <span><?= htmlspecialchars($prod['categoria_nombre']) ?></span>
                     <span>&bull;</span>
-                    <span style="font-family: 'JetBrains Mono', monospace;"><?= $prod['codigo_barras'] ?></span>
+                    <span style="font-variant-numeric: tabular-nums;"><?= $prod['codigo_barras'] ?></span>
                   </div>
                 </td>
                 <td style="text-align: center;">
@@ -351,17 +327,17 @@
                     <?= $prod['unidades_vendidas'] ?> und
                   </span>
                 </td>
-                <td style="text-align: center; font-weight: 700; font-family: 'JetBrains Mono', monospace;">
+                <td style="text-align: center; font-weight: 600; font-variant-numeric: tabular-nums;">
                   <?= $prod['stock'] ?>
                 </td>
-                <td style="text-align: right; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">
+                <td style="text-align: right; font-variant-numeric: tabular-nums; color: var(--text-muted);">
                   $ <?= number_format($prod['precio_compra'], 0, ',', '.') ?>
                 </td>
-                <td style="text-align: right; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #b45309;">
+                <td style="text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; color: #b45309;">
                   $ <?= number_format($prod['capital_inmovilizado'], 0, ',', '.') ?>
                 </td>
                 <td style="text-align: center;">
-                  <a href="<?= APP_URL ?>/inventario?search=<?= urlencode($prod['codigo_barras']) ?>" class="btn btn-outline btn-sm" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;" title="Ver en Inventario para promocionar o ajustar">
+                  <a href="<?= APP_URL ?>/inventario?search=<?= urlencode($prod['codigo_barras']) ?>" class="btn btn-outline btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" title="Ver en Inventario">
                     Ver
                   </a>
                 </td>
@@ -371,8 +347,7 @@
         </table>
       <?php else: ?>
         <div style="padding: 2.5rem 1rem; text-align: center; color: var(--text-muted);">
-          <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">✨</div>
-          <div style="font-weight: 700;">No hay productos con baja rotación</div>
+          <div style="font-weight: 600;">No hay productos con baja rotación</div>
         </div>
       <?php endif; ?>
     </div>
@@ -383,67 +358,86 @@
 <!-- ==============================================================================
      5. ACCESOS RÁPIDOS Y ESTADO OPERACIONAL
      ============================================================================== -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
   
   <!-- Acceso Rápido Operacional -->
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title">
-        <svg style="width: 20px; height: 20px; color: var(--primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        <span>Acceso Rápido Operacional</span>
-      </h3>
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span>Acceso Operacional</span>
+      </div>
     </div>
-    <div style="display: flex; flex-direction: column; gap: 0.85rem;">
-      <a href="<?= APP_URL ?>/pos" class="btn btn-primary btn-lg" style="justify-content: flex-start; gap: 0.85rem;">
-        <span style="font-size: 1.3rem;">🛒</span>
+    <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+      <a href="<?= APP_URL ?>/pos" class="btn btn-primary" style="justify-content: flex-start; gap: 0.75rem; padding: 0.75rem 1rem;">
+        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
         <div style="text-align: left;">
-          <div style="font-weight: 800; font-size: 1rem;">Terminal de Ventas (POS)</div>
-          <div style="font-size: 0.78rem; opacity: 0.85; font-weight: 500;">Facturación rápida y escáner de códigos de barras</div>
+          <div style="font-weight: 600; font-size: 0.9rem;">Terminal de Ventas (POS)</div>
+          <div style="font-size: 0.76rem; opacity: 0.8;">Facturación rápida y lector de barras</div>
         </div>
       </a>
       
-      <a href="<?= APP_URL ?>/inventario" class="btn btn-outline" style="justify-content: flex-start; gap: 0.85rem; padding: 0.9rem 1.25rem;">
-        <span style="font-size: 1.2rem;">📦</span>
+      <a href="<?= APP_URL ?>/inventario" class="btn btn-outline" style="justify-content: flex-start; gap: 0.75rem; padding: 0.75rem 1rem;">
+        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
         <div style="text-align: left;">
-          <div style="font-weight: 700; color: var(--text-main);">Gestión de Inventario y Precios</div>
-          <div style="font-size: 0.78rem; color: var(--text-muted);">Stock actual: <?= $metricasInventario['total_productos'] ?? 0 ?> productos (<?= $metricasInventario['total_unidades'] ?? 0 ?> unidades)</div>
+          <div style="font-weight: 600; color: var(--text-main); font-size: 0.9rem;">Gestión de Inventario</div>
+          <div style="font-size: 0.76rem; color: var(--text-muted);"><?= $metricasInventario['total_productos'] ?? 0 ?> productos (<?= $metricasInventario['total_unidades'] ?? 0 ?> unds)</div>
         </div>
       </a>
       
-      <a href="<?= APP_URL ?>/caja" class="btn btn-outline" style="justify-content: flex-start; gap: 0.85rem; padding: 0.9rem 1.25rem;">
-        <span style="font-size: 1.2rem;">💵</span>
+      <a href="<?= APP_URL ?>/caja" class="btn btn-outline" style="justify-content: flex-start; gap: 0.75rem; padding: 0.75rem 1rem;">
+        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <line x1="6" y1="12" x2="18" y2="12"></line>
+          <line x1="12" y1="10" x2="12" y2="14"></line>
+        </svg>
         <div style="text-align: left;">
-          <div style="font-weight: 700; color: var(--text-main);">Caja y Arqueo en Vivo</div>
-          <div style="font-size: 0.78rem; color: var(--text-muted);"><?= $sesionActiva ? 'Sesión #' . $sesionActiva['id'] . ' en curso' : 'Sin turno abierto' ?></div>
+          <div style="font-weight: 600; color: var(--text-main); font-size: 0.9rem;">Caja & Arqueo</div>
+          <div style="font-size: 0.76rem; color: var(--text-muted);"><?= $sesionActiva ? 'Turno #' . $sesionActiva['id'] . ' abierto' : 'Sin turno activo' ?></div>
         </div>
       </a>
     </div>
   </div>
 
   <!-- Estado del Sistema y Datos Financieros -->
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title">
-        <svg style="width: 20px; height: 20px; color: var(--info);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-        <span>Salud del Sistema & Valoración de Inventario</span>
-      </h3>
-      <span class="badge badge-success">🟢 Operativo</span>
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+        </svg>
+        <span>Estado del Sistema & Valoración</span>
+      </div>
+      <span class="badge badge-success" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 500;">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: #16a34a;"></span>
+        <span>Operativo</span>
+      </span>
     </div>
     
-    <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
-      Servidor Apache/PHP y Base de Datos PostgreSQL (Supabase) sincronizados en tiempo real.
+    <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+      Servidor Apache/PHP y Base de Datos PostgreSQL sincronizados en tiempo real.
     </p>
 
-    <div style="background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: var(--radius-md); padding: 1.15rem; font-size: 0.85rem;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+    <div style="background: var(--bg-muted); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; font-size: 0.84rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.45rem;">
         <span style="color: var(--text-muted);">Valoración Inventario (Costo):</span>
-        <strong style="font-family: 'JetBrains Mono', monospace; color: #b45309;">$ <?= number_format($metricasInventario['valor_costo_total'] ?? 0, 0, ',', '.') ?></strong>
+        <strong style="font-variant-numeric: tabular-nums; color: #b45309;">$ <?= number_format($metricasInventario['valor_costo_total'] ?? 0, 0, ',', '.') ?></strong>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.45rem;">
         <span style="color: var(--text-muted);">Valor Potencial de Venta:</span>
-        <strong style="font-family: 'JetBrains Mono', monospace; color: var(--primary);">$ <?= number_format($metricasInventario['valor_venta_total'] ?? 0, 0, ',', '.') ?></strong>
+        <strong style="font-variant-numeric: tabular-nums; color: var(--text-main);">$ <?= number_format($metricasInventario['valor_venta_total'] ?? 0, 0, ',', '.') ?></strong>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.45rem;">
         <span style="color: var(--text-muted);">Alertas de Stock Bajo:</span>
         <strong style="color: <?= ($metricasInventario['alertas_stock_bajo'] ?? 0) > 0 ? 'var(--danger)' : 'var(--success)' ?>;">
           <?= $metricasInventario['alertas_stock_bajo'] ?? 0 ?> productos
@@ -451,7 +445,7 @@
       </div>
       <div style="display: flex; justify-content: space-between;">
         <span style="color: var(--text-muted);">Impresora Térmica:</span>
-        <strong style="color: #047857;">ESC/POS <?= htmlspecialchars($config['impresora_tipo'] ?? 'POS-58') ?></strong>
+        <strong style="color: var(--text-main);">ESC/POS <?= htmlspecialchars($config['impresora_tipo'] ?? 'POS-58') ?></strong>
       </div>
     </div>
   </div>

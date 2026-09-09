@@ -1,52 +1,36 @@
 <!-- ==============================================================================
-     VISTA DE INVENTARIO Y MOVIMIENTOS (MÓDULOS 1 Y 2)
+     VISTA DE INVENTARIO Y MOVIMIENTOS (Sober SaaS)
      ============================================================================== -->
 
-<!-- MÉTRICAS SUPERIORES DE INVENTARIO -->
-<div class="kpi-grid">
-  <div class="kpi-card" style="border-left: 4px solid var(--primary);">
-    <div class="kpi-icon primary">
-      <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-    </div>
-    <div class="kpi-details">
-      <div class="kpi-label">Total Referencias</div>
-      <div class="kpi-value" id="kpiTotalRefs" style="color: var(--primary);"><?= count($productos) ?></div>
-    </div>
+<!-- MÉTRICAS SUPERIORES DE INVENTARIO (METRIC STRIP) -->
+<div class="metric-strip" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem;">
+  <div class="metric-cell">
+    <span class="metric-cell-label">Total Referencias</span>
+    <span class="metric-cell-val" id="kpiTotalRefs"><?= count($productos) ?></span>
+    <span class="metric-cell-sub">Catálogo activo</span>
   </div>
 
-  <div class="kpi-card" style="border-left: 4px solid var(--success);">
-    <div class="kpi-icon success">
-      <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-    </div>
-    <div class="kpi-details">
-      <div class="kpi-label">Unidades en Stock</div>
-      <div class="kpi-value" id="kpiTotalUnits" style="color: var(--success);"><?= number_format($metricas['total_unidades'] ?? 0, 0, ',', '.') ?></div>
-    </div>
+  <div class="metric-cell">
+    <span class="metric-cell-label">Unidades en Stock</span>
+    <span class="metric-cell-val" id="kpiTotalUnits"><?= number_format($metricas['total_unidades'] ?? 0, 0, ',', '.') ?></span>
+    <span class="metric-cell-sub">En bodega y vitrina</span>
   </div>
 
-  <div class="kpi-card" style="border-left: 4px solid var(--warning);">
-    <div class="kpi-icon warning">
-      <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-    </div>
-    <div class="kpi-details">
-      <div class="kpi-label">Alertas Stock Bajo</div>
-      <div class="kpi-value" id="kpiLowStock" style="color: <?= ($metricas['alertas_stock_bajo'] ?? 0) > 0 ? 'var(--danger)' : 'var(--success)' ?>;"><?= $metricas['alertas_stock_bajo'] ?? 0 ?></div>
-    </div>
+  <div class="metric-cell">
+    <span class="metric-cell-label">Alertas Stock Bajo</span>
+    <span class="metric-cell-val" id="kpiLowStock" style="color: <?= ($metricas['alertas_stock_bajo'] ?? 0) > 0 ? 'var(--danger)' : 'inherit' ?>;"><?= $metricas['alertas_stock_bajo'] ?? 0 ?></span>
+    <span class="metric-cell-sub">Bajo umbral mínimo</span>
   </div>
 
-  <div class="kpi-card" style="border-left: 4px solid var(--info);">
-    <div class="kpi-icon info">
-      <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    </div>
-    <div class="kpi-details">
-      <div class="kpi-label">Valoración Total</div>
-      <div class="kpi-value" style="color: var(--info);">$ <?= number_format($metricas['valor_venta_total'] ?? 0, 0, ',', '.') ?></div>
-    </div>
+  <div class="metric-cell">
+    <span class="metric-cell-label">Valoración Total</span>
+    <span class="metric-cell-val">$ <?= number_format($metricas['valor_venta_total'] ?? 0, 0, ',', '.') ?></span>
+    <span class="metric-cell-sub">Precio venta al público</span>
   </div>
 </div>
 
 <!-- BARRA DE HERRAMIENTAS Y FILTROS -->
-<div class="card" style="margin-bottom: 1.5rem;">
+<div class="panel" style="margin-bottom: 1.5rem; padding: 1rem 1.25rem;">
   <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;">
     
     <!-- Filtros de búsqueda en vivo -->
@@ -56,7 +40,7 @@
           type="text" 
           id="searchProductInput" 
           class="form-control" 
-          placeholder="🔍 Buscar por nombre o código de barras..." 
+          placeholder="Buscar por nombre o código de barras..." 
           value="<?= htmlspecialchars($search) ?>"
           autocomplete="off"
         >
@@ -74,28 +58,31 @@
       <select id="filterStockSelect" class="form-control" style="width: auto; min-width: 160px;">
         <option value="">Todo el Stock</option>
         <option value="ok" <?= $stockStatus === 'ok' ? 'selected' : '' ?>>Stock Normal</option>
-        <option value="low" <?= $stockStatus === 'low' ? 'selected' : '' ?>>⚠️ Stock Bajo</option>
-        <option value="out" <?= $stockStatus === 'out' ? 'selected' : '' ?>>🔴 Agotados</option>
+        <option value="low" <?= $stockStatus === 'low' ? 'selected' : '' ?>>Stock Bajo</option>
+        <option value="out" <?= $stockStatus === 'out' ? 'selected' : '' ?>>Agotados</option>
       </select>
     </div>
 
     <!-- Botones de Acción -->
     <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
       <a href="<?= APP_URL ?>/inventario/kardex" class="btn btn-outline" title="Ver Historial de Entradas y Salidas">
-        <span>📋</span> <span>Kárdex</span>
+        <svg style="width: 15px; height: 15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+        <span>Kárdex</span>
       </a>
       <button type="button" class="btn btn-outline" onclick="openModal('modalNuevaCategoria')">
-        <span>📁</span> <span>Nueva Categoría</span>
+        <svg style="width: 15px; height: 15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+        <span>Nueva Categoría</span>
       </button>
       <button type="button" class="btn btn-primary" onclick="openModal('modalNuevoProducto')">
-        <span>➕</span> <span>Nuevo Producto</span>
+        <svg style="width: 15px; height: 15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <span>Nuevo Producto</span>
       </button>
     </div>
   </div>
 </div>
 
 <!-- TABLA MAESTRA DE PRODUCTOS -->
-<div class="card" style="padding: 0; overflow: hidden;">
+<div class="panel" style="padding: 0; overflow: hidden;">
   <div class="table-responsive">
     <table class="table" id="tablaProductos">
       <thead>
@@ -149,7 +136,7 @@
                 data-descripcion="<?= htmlspecialchars($prod['descripcion'] ?? '') ?>"
             >
               <td>
-                <span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.82rem; color: #475569; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                <span style="font-variant-numeric: tabular-nums; font-weight: 600; font-size: 0.82rem; color: var(--text-secondary); background: #f4f4f5; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-color);">
                   <?= htmlspecialchars($prod['codigo_barras']) ?>
                 </span>
               </td>
@@ -164,7 +151,7 @@
                 <?php endif; ?>
               </td>
               <td>
-                <span class="badge badge-info">
+                <span class="badge badge-neutral">
                   <?= htmlspecialchars($prod['categoria_nombre'] ?? 'Sin categoría') ?>
                 </span>
               </td>
@@ -173,14 +160,14 @@
                   <?= $stockText ?>
                 </span>
               </td>
-              <td style="text-align: right; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">
+              <td style="text-align: right; font-variant-numeric: tabular-nums; color: var(--text-muted);">
                 $ <?= number_format($pCompra, 0, ',', '.') ?>
               </td>
-              <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-main);" id="precio-venta-<?= $prod['id'] ?>">
+              <td style="text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text-main);" id="precio-venta-<?= $prod['id'] ?>">
                 $ <?= number_format($pVenta, 0, ',', '.') ?>
               </td>
               <td style="text-align: center;">
-                <span style="font-size: 0.82rem; font-weight: 700; color: <?= $margen >= 40 ? 'var(--success)' : 'var(--text-muted)' ?>;">
+                <span style="font-size: 0.82rem; font-weight: 600; font-variant-numeric: tabular-nums; color: <?= $margen >= 40 ? 'var(--success)' : 'var(--text-muted)' ?>;">
                   <?= $margen ?>%
                 </span>
               </td>
@@ -189,32 +176,33 @@
                 <button 
                   type="button" 
                   class="btn btn-outline" 
-                  style="padding: 0.35rem 0.6rem; font-size: 0.82rem; color: var(--primary); border-color: var(--primary-light);" 
-                  title="Ajuste Rápido de Stock y Precio (Módulo 2)"
+                  style="padding: 0.35rem 0.6rem; font-size: 0.82rem;" 
+                  title="Ajuste Rápido de Stock y Precio"
                   onclick="abrirAjusteRapido(<?= $prod['id'] ?>)"
                 >
-                  ⚡ Ajustar
+                  <svg style="width: 14px; height: 14px; display: inline-block; vertical-align: -2px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                  <span>Ajustar</span>
                 </button>
                 
                 <!-- Botón Editar Completo -->
                 <button 
                   type="button" 
                   class="btn btn-outline" 
-                  style="padding: 0.35rem 0.6rem; font-size: 0.82rem;" 
+                  style="padding: 0.35rem 0.55rem; font-size: 0.82rem;" 
                   title="Editar Producto"
                   onclick="abrirEditarProducto(<?= $prod['id'] ?>)"
                 >
-                  ✏️
+                  <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 </button>
 
                 <!-- Botón Ver Kárdex del Producto -->
                 <a 
                   href="<?= APP_URL ?>/inventario/kardex/<?= $prod['id'] ?>" 
                   class="btn btn-outline" 
-                  style="padding: 0.35rem 0.6rem; font-size: 0.82rem;" 
+                  style="padding: 0.35rem 0.55rem; font-size: 0.82rem;" 
                   title="Historial de Movimientos"
                 >
-                  📋
+                  <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                 </a>
 
                 <?php if (\App\Core\Auth::isAdmin()): ?>
@@ -222,11 +210,11 @@
                 <a 
                   href="<?= APP_URL ?>/inventario/eliminar/<?= $prod['id'] ?>" 
                   class="btn btn-outline" 
-                  style="padding: 0.35rem 0.6rem; font-size: 0.82rem; color: var(--danger);" 
+                  style="padding: 0.35rem 0.55rem; font-size: 0.82rem; color: var(--danger);" 
                   title="Eliminar Producto"
                   onclick="return confirm('¿Está seguro de eliminar el producto \'<?= addslashes($prod['nombre']) ?>\'?')"
                 >
-                  🗑️
+                  <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 </a>
                 <?php endif; ?>
               </td>
@@ -246,8 +234,8 @@
 <div class="modal-backdrop" id="modalNuevoProducto">
   <div class="modal-dialog" style="max-width: 600px;">
     <div class="modal-header">
-      <h3 style="font-size: 1.15rem; font-weight: 700;">➕ Registrar Nuevo Accesorio / Producto</h3>
-      <button type="button" onclick="closeModal('modalNuevoProducto')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;">&times;</button>
+      <h3 style="font-size: 1.15rem; font-weight: 700;">Registrar Nuevo Accesorio / Producto</h3>
+      <button type="button" onclick="closeModal('modalNuevoProducto')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">&times;</button>
     </div>
     
     <form action="<?= APP_URL ?>/inventario/guardar" method="POST" id="formNuevoProducto">
@@ -318,8 +306,8 @@
 <div class="modal-backdrop" id="modalEditarProducto">
   <div class="modal-dialog" style="max-width: 600px;">
     <div class="modal-header">
-      <h3 style="font-size: 1.15rem; font-weight: 700;">✏️ Editar Información de Producto</h3>
-      <button type="button" onclick="closeModal('modalEditarProducto')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;">&times;</button>
+      <h3 style="font-size: 1.15rem; font-weight: 700;">Editar Información de Producto</h3>
+      <button type="button" onclick="closeModal('modalEditarProducto')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">&times;</button>
     </div>
     
     <form action="" method="POST" id="formEditarProducto">
@@ -378,38 +366,38 @@
   </div>
 </div>
 
-<!-- 3. MODAL: AJUSTE RÁPIDO DE STOCK Y PRECIO (MÓDULO 2 CORE) -->
+<!-- 3. MODAL: AJUSTE RÁPIDO DE STOCK Y PRECIO -->
 <div class="modal-backdrop" id="modalAjusteRapido">
   <div class="modal-dialog" style="max-width: 480px;">
     <div class="modal-header">
-      <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--primary);">⚡ Ajuste Rápido de Stock y Precio</h3>
-      <button type="button" onclick="closeModal('modalAjusteRapido')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;">&times;</button>
+      <h3 style="font-size: 1.15rem; font-weight: 700;">Ajuste Rápido de Stock y Precio</h3>
+      <button type="button" onclick="closeModal('modalAjusteRapido')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">&times;</button>
     </div>
     
     <form id="formAjusteRapido">
       <input type="hidden" id="ajuste_producto_id" name="producto_id" value="">
       
       <div class="modal-body">
-        <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1rem;">
-          <div style="font-weight: 700; color: var(--text-main);" id="ajuste_prod_nombre">Cargando...</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);" id="ajuste_prod_codigo">Código: -</div>
+        <div style="background: #f4f4f5; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.85rem; margin-bottom: 1rem;">
+          <div style="font-weight: 600; color: var(--text-main);" id="ajuste_prod_nombre">Cargando...</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-variant-numeric: tabular-nums;" id="ajuste_prod_codigo">Código: -</div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
           <div class="form-group">
             <label class="form-label" for="ajuste_stock">Cantidad en Stock</label>
-            <input type="number" min="0" id="ajuste_stock" name="stock" class="form-control form-control-lg" style="font-weight: 700;" required>
+            <input type="number" min="0" id="ajuste_stock" name="stock" class="form-control form-control-lg" style="font-weight: 600; font-variant-numeric: tabular-nums;" required>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="ajuste_precio_venta">Precio Venta ($)</label>
-            <input type="number" step="0.01" min="0.01" id="ajuste_precio_venta" name="precio_venta" class="form-control form-control-lg" style="font-weight: 700;" required>
+            <input type="number" step="0.01" min="0.01" id="ajuste_precio_venta" name="precio_venta" class="form-control form-control-lg" style="font-weight: 600; font-variant-numeric: tabular-nums;" required>
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="ajuste_precio_compra">Precio Compra ($) (Opcional)</label>
-          <input type="number" step="0.01" min="0" id="ajuste_precio_compra" name="precio_compra" class="form-control">
+          <input type="number" step="0.01" min="0" id="ajuste_precio_compra" name="precio_compra" class="form-control" style="font-variant-numeric: tabular-nums;">
         </div>
 
         <div class="form-group">
@@ -420,7 +408,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-outline" onclick="closeModal('modalAjusteRapido')">Cancelar</button>
-        <button type="submit" class="btn btn-primary">⚡ Guardar Ajuste</button>
+        <button type="submit" class="btn btn-primary">Guardar Ajuste</button>
       </div>
     </form>
   </div>
@@ -430,8 +418,8 @@
 <div class="modal-backdrop" id="modalNuevaCategoria">
   <div class="modal-dialog" style="max-width: 440px;">
     <div class="modal-header">
-      <h3 style="font-size: 1.15rem; font-weight: 700;">📁 Crear Nueva Categoría</h3>
-      <button type="button" onclick="closeModal('modalNuevaCategoria')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;">&times;</button>
+      <h3 style="font-size: 1.15rem; font-weight: 700;">Crear Nueva Categoría</h3>
+      <button type="button" onclick="closeModal('modalNuevaCategoria')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">&times;</button>
     </div>
     
     <form id="formNuevaCategoria">

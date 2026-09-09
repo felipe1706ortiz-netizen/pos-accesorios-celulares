@@ -37,8 +37,8 @@ function initDashboardCharts() {
   }
 
   // Configuración global de fuentes y colores para Chart.js
-  Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
-  Chart.defaults.color = '#64748b';
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.color = '#71717a';
   Chart.defaults.plugins.tooltip.padding = 10;
   Chart.defaults.plugins.tooltip.cornerRadius = 8;
   Chart.defaults.plugins.tooltip.titleFont = { weight: 'bold', size: 12 };

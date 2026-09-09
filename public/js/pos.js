@@ -295,9 +295,9 @@ function renderizarCarrito() {
     tbody.innerHTML = `
       <tr id="emptyCartRow">
         <td colspan="5" style="text-align: center; padding: 4rem 1.5rem; color: var(--text-muted);">
-          <div style="font-size: 3rem; margin-bottom: 0.5rem; opacity: 0.6;">📦</div>
-          <div style="font-size: 1.1rem; font-weight: 600; color: var(--text-main);">El carrito está vacío</div>
-          <div style="font-size: 0.88rem; margin-top: 0.25rem;">
+          <div style="margin-bottom: 0.75rem; color: var(--text-muted);"><svg style="width: 36px; height: 36px; margin: 0 auto; stroke-width: 1.5;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg></div>
+          <div style="font-size: 1.05rem; font-weight: 600; color: var(--text-main);">El carrito está vacío</div>
+          <div style="font-size: 0.85rem; margin-top: 0.25rem;">
             Escanee un código de barras o presione <kbd>F2</kbd> para buscar accesorios manualmente.
           </div>
         </td>
@@ -340,7 +340,7 @@ function renderizarCarrito() {
         </td>
         <td style="text-align: center;">
           <button type="button" class="btn btn-outline" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: transparent;" onclick="eliminarItemCarrito(${it.id})" title="Quitar ítem">
-            ✕
+            <svg style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </td>
       </tr>
@@ -625,7 +625,7 @@ async function confirmarVenta() {
         printIframe.src = res.print_url;
       }
 
-      showToast(`✅ Venta #${res.numero_factura} exitosa. Cambio: $ ${formatearMoneda(res.cambio)}`, 'success', 4000);
+      showToast(`Venta #${res.numero_factura} exitosa. Cambio: $ ${formatearMoneda(res.cambio)}`, 'success', 4000);
 
       // 2. BUCLE DE HARD RESET CONTINUO (< 500ms)
       closeModal('modalCobro');

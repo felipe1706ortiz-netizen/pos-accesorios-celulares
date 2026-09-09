@@ -1,94 +1,105 @@
 <!-- ==============================================================================
-     VISTA: ESTADO DE VERIFICACIÓN DE CORREO (UI/UX PRO MAX)
+     VISTA: ESTADO DE VERIFICACIÓN DE CORREO (Sober SaaS)
      ============================================================================== -->
 
-<div class="auth-card" style="max-width: 500px; text-align: center;">
-
-  <?php if (($status ?? '') === 'success'): ?>
-    <div style="width: 72px; height: 72px; border-radius: 50%; background: #dcfce7; color: #16a34a; font-size: 2.2rem; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; box-shadow: 0 10px 25px rgba(22, 163, 74, 0.2);">
-      ✅
+<?php if (($status ?? '') === 'success'): ?>
+  <div class="auth-header" style="text-align: center;">
+    <div style="width: 48px; height: 48px; border-radius: 50%; background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+      <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
     </div>
-    <h1 class="auth-title" style="color: var(--success); font-size: 1.6rem;">¡Cuenta Verificada!</h1>
-    <p class="auth-subtitle" style="font-size: 0.95rem; margin-top: 0.5rem; line-height: 1.5;">
+    <h1 class="auth-title">Cuenta Verificada</h1>
+    <p class="auth-subtitle" style="margin-top: 0.5rem; line-height: 1.5;">
       <?= htmlspecialchars($message ?? 'Tu correo electrónico ha sido confirmado exitosamente.') ?>
     </p>
+  </div>
 
-    <div style="margin-top: 2rem;">
-      <a href="<?= APP_URL ?>/login" class="btn btn-primary btn-block btn-lg" style="width: 100%; font-weight: 800; font-size: 1rem; padding: 0.85rem;">
-        <span>Ingresar al Sistema POS</span> <span>➔</span>
-      </a>
+  <div style="margin-top: 2rem;">
+    <a href="<?= APP_URL ?>/login" class="btn btn-primary" style="width: 100%; height: 42px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+      Ingresar al Sistema POS
+    </a>
+  </div>
+
+<?php elseif (($status ?? '') === 'pending'): ?>
+  <div class="auth-header" style="text-align: center;">
+    <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--bg-hover); border: 1px solid var(--border-color); color: var(--text-main); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+      <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+        <polyline points="22,6 12,13 2,6"></polyline>
+      </svg>
     </div>
 
-  <?php elseif (($status ?? '') === 'pending'): ?>
-    <div style="width: 72px; height: 72px; border-radius: 50%; background: <?= !empty($mailSuccess) ? '#e0e7ff' : '#fee2e2' ?>; color: <?= !empty($mailSuccess) ? '#4f46e5' : '#dc2626' ?>; font-size: 2.2rem; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.25);">
-      <?= !empty($mailSuccess) ? '✉️' : '⚠️' ?>
-    </div>
-
-    <h1 class="auth-title" style="font-size: 1.5rem;">
+    <h1 class="auth-title">
       <?= !empty($mailSuccess) ? 'Revisa tu Correo' : 'Error en Envío' ?>
     </h1>
 
-    <p class="auth-subtitle" style="font-size: 0.95rem; margin-top: 0.5rem; line-height: 1.5;">
+    <p class="auth-subtitle" style="margin-top: 0.5rem; line-height: 1.5;">
       <?= htmlspecialchars($message ?? '') ?><br>
-      <strong style="color: var(--text-main); font-size: 1rem;"><?= htmlspecialchars($email ?? '') ?></strong>
+      <strong style="color: var(--text-main); font-weight: 600;"><?= htmlspecialchars($email ?? '') ?></strong>
     </p>
+  </div>
 
-    <?php if (!empty($mailSuccess)): ?>
-      <div style="background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.15rem; margin: 1.5rem 0; font-size: 0.88rem; color: var(--text-muted); text-align: left;">
-        <div style="font-weight: 700; color: var(--text-main); margin-bottom: 0.35rem;">💡 Próximos pasos:</div>
-        1. Abre tu correo y revisa tu <strong>Bandeja de Entrada</strong> o <strong>Spam</strong>.<br>
-        2. Haz clic en <strong>"Activar y Verificar Mi Cuenta"</strong> en el correo recibido.<br>
-        3. El enlace es válido durante 24 horas.
-      </div>
-    <?php else: ?>
-      <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: var(--radius-lg); padding: 1.15rem; margin: 1.5rem 0; font-size: 0.88rem; color: #991b1b; text-align: left;">
-        <div style="font-weight: 700; margin-bottom: 0.35rem;">⚠️ No se pudo enviar el correo de activación:</div>
-        <?= htmlspecialchars($mailMessage ?? 'El servidor de correo no respondió a la conexión.') ?><br><br>
-        <span style="font-size: 0.82rem; color: #7f1d1d;">Verifica la conectividad SMTP en tu hosting o solicita al administrador del sistema la verificación manual de tu cuenta.</span>
-      </div>
-    <?php endif; ?>
-
-    <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap;">
-      <?php if (!empty($email)): ?>
-        <form action="<?= APP_URL ?>/reenviar-verificacion" method="POST" style="margin: 0;">
-          <input type="hidden" name="csrf_token" value="<?= $csrfToken ?? '' ?>">
-          <input type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">
-          <button type="submit" class="btn btn-primary" style="font-weight: 700; padding: 0.65rem 1.25rem;">
-            Reintentar Envío ✉️
-          </button>
-        </form>
-      <?php endif; ?>
-      <a href="<?= APP_URL ?>/login" class="btn btn-outline" style="font-weight: 700;">
-        Volver al Login
-      </a>
+  <?php if (!empty($mailSuccess)): ?>
+    <div class="alert alert-info" style="display: block; font-size: 0.88rem; line-height: 1.6; margin: 1.5rem 0;">
+      <div style="font-weight: 600; margin-bottom: 0.5rem; color: #1e40af;">Próximos pasos:</div>
+      1. Abre tu correo y revisa tu bandeja de entrada o carpeta de spam.<br>
+      2. Haz clic en el enlace de confirmación recibido.<br>
+      3. El enlace es válido durante 24 horas.
     </div>
-
   <?php else: ?>
-    <!-- Error o Expirado -->
-    <div style="width: 72px; height: 72px; border-radius: 50%; background: #fee2e2; color: #dc2626; font-size: 2.2rem; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; box-shadow: 0 10px 25px rgba(220, 38, 38, 0.2);">
-      ⚠️
+    <div class="alert alert-danger" style="display: block; font-size: 0.88rem; line-height: 1.6; margin: 1.5rem 0;">
+      <div style="font-weight: 600; margin-bottom: 0.5rem; color: #991b1b;">No se pudo enviar el correo de activación:</div>
+      <?= htmlspecialchars($mailMessage ?? 'El servidor de correo no respondió a la conexión.') ?><br><br>
+      <span style="font-size: 0.82rem;">Verifica la conectividad SMTP en tu hosting o solicita al administrador del sistema la verificación manual.</span>
     </div>
-    <h1 class="auth-title" style="color: var(--danger); font-size: 1.5rem;"><?= htmlspecialchars($title ?? 'Enlace Inválido') ?></h1>
-    <p class="auth-subtitle" style="font-size: 0.95rem; margin-top: 0.5rem; line-height: 1.5;">
-      <?= htmlspecialchars($message ?? 'Ocurrió un inconveniente con la verificación de tu cuenta.') ?>
-    </p>
+  <?php endif; ?>
 
+  <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap;">
     <?php if (!empty($email)): ?>
-      <form action="<?= APP_URL ?>/reenviar-verificacion" method="POST" style="margin-top: 1.5rem;">
-        <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+      <form action="<?= APP_URL ?>/reenviar-verificacion" method="POST" style="margin: 0;">
+        <input type="hidden" name="csrf_token" value="<?= $csrfToken ?? '' ?>">
         <input type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">
-        <button type="submit" class="btn btn-primary btn-block" style="width: 100%; font-weight: 700; padding: 0.75rem;">
-          Reintentar Activación ✉️
+        <button type="submit" class="btn btn-primary" style="font-size: 0.88rem; padding: 0.5rem 1.25rem;">
+          Reintentar Envío
         </button>
       </form>
     <?php endif; ?>
+    <a href="<?= APP_URL ?>/login" class="btn btn-outline" style="font-size: 0.88rem; padding: 0.5rem 1.25rem;">
+      Volver al Login
+    </a>
+  </div>
 
-    <div style="margin-top: 1.5rem;">
-      <a href="<?= APP_URL ?>/login" class="btn btn-outline">
-        Volver al Inicio de Sesión
-      </a>
+<?php else: ?>
+  <!-- Error o Expirado -->
+  <div class="auth-header" style="text-align: center;">
+    <div style="width: 48px; height: 48px; border-radius: 50%; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+      <svg style="width: 22px; height: 22px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
     </div>
+    <h1 class="auth-title"><?= htmlspecialchars($title ?? 'Enlace Inválido') ?></h1>
+    <p class="auth-subtitle" style="margin-top: 0.5rem; line-height: 1.5;">
+      <?= htmlspecialchars($message ?? 'Ocurrió un inconveniente con la verificación de tu cuenta.') ?>
+    </p>
+  </div>
 
+  <?php if (!empty($email)): ?>
+    <form action="<?= APP_URL ?>/reenviar-verificacion" method="POST" style="margin-top: 1.5rem;">
+      <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+      <input type="hidden" name="email" value="<?= htmlspecialchars($email) ?>">
+      <button type="submit" class="btn btn-primary" style="width: 100%; height: 42px;">
+        Reintentar Activación
+      </button>
+    </form>
   <?php endif; ?>
 
-</div>
+  <div style="margin-top: 1.5rem; text-align: center;">
+    <a href="<?= APP_URL ?>/login" class="btn btn-outline" style="width: 100%;">
+      Volver al Inicio de Sesión
+    </a>
+  </div>
+
+<?php endif; ?>

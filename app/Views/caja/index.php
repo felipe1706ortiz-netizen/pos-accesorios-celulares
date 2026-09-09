@@ -18,113 +18,105 @@ $saldoEsperado = (float)$sesion['monto_esperado'];
 ?>
 
   <!-- CABECERA DEL TURNO ACTIVO -->
-  <div class="card" style="margin-bottom: 1.5rem;">
+  <div class="panel" style="margin-bottom: 1.25rem;">
     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
       <div>
-        <div style="display: flex; align-items: center; gap: 0.85rem;">
-          <h2 style="font-size: 1.45rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.02em;">
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; margin: 0;">
             Turno de Caja #<?= $sesion['id'] ?>
           </h2>
-          <span class="badge badge-success">🟢 ABIERTA Y OPERATIVA</span>
+          <span class="badge badge-success" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: #16a34a; display: inline-block;"></span>
+            <span>Abierta</span>
+          </span>
         </div>
-        <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.35rem;">
-          Cajero responsable: <strong style="color: var(--text-main);"><?= htmlspecialchars($sesion['usuario_nombre'] ?? $currentUser['nombre']) ?></strong> • Apertura: <strong><?= date('d/m/Y H:i', strtotime($sesion['fecha_apertura'])) ?></strong>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+          Cajero responsable: <strong style="color: var(--text-main);"><?= htmlspecialchars($sesion['usuario_nombre'] ?? $currentUser['nombre']) ?></strong> &bull; Apertura: <strong><?= date('d/m/Y H:i', strtotime($sesion['fecha_apertura'])) ?></strong>
         </p>
       </div>
 
-      <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
-        <button type="button" class="btn btn-outline" style="font-weight: 700; color: var(--success); border-color: #a7f3d0;" onclick="abrirModalMovimiento('ENTRADA')">
-          <span>➕</span> <span>Entrada Efectivo</span>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="abrirModalMovimiento('ENTRADA')">
+          <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>Entrada Efectivo</span>
         </button>
-        <button type="button" class="btn btn-outline" style="font-weight: 700; color: var(--danger); border-color: #fecdd3;" onclick="abrirModalMovimiento('SALIDA')">
-          <span>➖</span> <span>Salida / Gasto</span>
+        <button type="button" class="btn btn-outline btn-sm" onclick="abrirModalMovimiento('SALIDA')">
+          <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>Salida / Gasto</span>
         </button>
-        <a href="<?= APP_URL ?>/caja/cierre" class="btn btn-danger" style="font-weight: 800;">
-          <span>🔒</span> <span>Cerrar Caja (Arqueo)</span>
+        <a href="<?= APP_URL ?>/caja/cierre" class="btn btn-primary btn-sm">
+          <span>Cerrar Caja (Arqueo)</span>
         </a>
       </div>
     </div>
   </div>
 
-  <!-- RESUMEN DE SALDOS EN TIEMPO REAL -->
-  <div class="kpi-grid">
-    <div class="kpi-card" style="border-left: 4px solid var(--primary);">
-      <div class="kpi-icon primary">
-        <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-      </div>
-      <div class="kpi-details">
-        <div class="kpi-label">Fondo / Base Inicial</div>
-        <div class="kpi-value" style="color: var(--primary);">$ <?= number_format($montoInicial, 0, ',', '.') ?></div>
-      </div>
+  <!-- RESUMEN DE SALDOS EN TIEMPO REAL (METRIC STRIP) -->
+  <div class="metric-strip">
+    <div class="metric-cell">
+      <div class="metric-cell-label">Fondo / Base Inicial</div>
+      <div class="metric-cell-value">$ <?= number_format($montoInicial, 0, ',', '.') ?></div>
+      <div class="metric-cell-sub">Apertura de turno</div>
     </div>
 
-    <div class="kpi-card" style="border-left: 4px solid var(--success);">
-      <div class="kpi-icon success">
-        <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      </div>
-      <div class="kpi-details">
-        <div class="kpi-label">Ventas en Efectivo</div>
-        <div class="kpi-value" style="color: var(--success);">$ <?= number_format($ventasEf, 0, ',', '.') ?></div>
-      </div>
+    <div class="metric-cell">
+      <div class="metric-cell-label">Ventas en Efectivo</div>
+      <div class="metric-cell-value" style="color: var(--success);">$ <?= number_format($ventasEf, 0, ',', '.') ?></div>
+      <div class="metric-cell-sub">Recaudado en caja</div>
     </div>
 
-    <div class="kpi-card" style="border-left: 4px solid var(--info);">
-      <div class="kpi-icon info">
-        <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/></svg>
-      </div>
-      <div class="kpi-details">
-        <div class="kpi-label">Entradas Manuales</div>
-        <div class="kpi-value" style="color: var(--info);">+ $ <?= number_format($entradas, 0, ',', '.') ?></div>
-      </div>
+    <div class="metric-cell">
+      <div class="metric-cell-label">Entradas Manuales</div>
+      <div class="metric-cell-value" style="color: var(--info);">+ $ <?= number_format($entradas, 0, ',', '.') ?></div>
+      <div class="metric-cell-sub">Ingresos extraordinarios</div>
     </div>
 
-    <div class="kpi-card" style="border-left: 4px solid var(--danger);">
-      <div class="kpi-icon danger">
-        <svg style="width: 26px; height: 26px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"/></svg>
-      </div>
-      <div class="kpi-details">
-        <div class="kpi-label">Salidas / Gastos</div>
-        <div class="kpi-value" style="color: var(--danger);">- $ <?= number_format($salidas, 0, ',', '.') ?></div>
-      </div>
+    <div class="metric-cell">
+      <div class="metric-cell-label">Salidas / Gastos</div>
+      <div class="metric-cell-value" style="color: var(--danger);">- $ <?= number_format($salidas, 0, ',', '.') ?></div>
+      <div class="metric-cell-sub">Retiros del turno</div>
     </div>
   </div>
 
   <!-- BALANCE PRINCIPAL Y OTROS MEDIOS DE PAGO -->
-  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;">
     
-    <!-- SALDO TEÓRICO ESPERADO EN CAJA (DESTACADO HERO CARD) -->
-    <div class="card" style="background: linear-gradient(135deg, #0b0f19 0%, #1e1b4b 50%, #0f172a 100%); color: #ffffff; display: flex; flex-direction: column; justify-content: center; padding: 2.25rem; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; overflow: hidden;">
-      <div style="font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8;">
+    <!-- SALDO TEÓRICO ESPERADO EN CAJA -->
+    <div class="panel" style="display: flex; flex-direction: column; justify-content: center; padding: 1.75rem;">
+      <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
         Saldo Teórico Esperado en Gaveta (Efectivo Físico)
       </div>
-      <div style="font-size: 3.2rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: #10b981; margin: 0.5rem 0; text-shadow: 0 0 25px rgba(16, 185, 129, 0.35);">
+      <div style="font-size: 2.4rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--success); margin: 0.4rem 0;">
         $ <?= number_format($saldoEsperado, 0, ',', '.') ?>
       </div>
-      <div style="font-size: 0.88rem; color: #cbd5e1;">
-        Fórmula: (Base $ <?= number_format($montoInicial, 0, ',', '.') ?> + Ventas Ef. $ <?= number_format($ventasEf, 0, ',', '.') ?> + Entradas $ <?= number_format($entradas, 0, ',', '.') ?>) − Salidas $ <?= number_format($salidas, 0, ',', '.') ?>
+      <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+        Base ($ <?= number_format($montoInicial, 0, ',', '.') ?>) + Ventas Ef. ($ <?= number_format($ventasEf, 0, ',', '.') ?>) + Entradas ($ <?= number_format($entradas, 0, ',', '.') ?>) − Salidas ($ <?= number_format($salidas, 0, ',', '.') ?>)
       </div>
     </div>
 
     <!-- VENTAS POR OTROS MÉTODOS DE PAGO (DIGITAL) -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">
-          <svg style="width: 20px; height: 20px; color: var(--info);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
           <span>Ventas Digitales</span>
-        </h3>
+        </div>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.92rem;">
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.88rem;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="color: var(--text-muted);">💳 Datáfono / Tarjetas:</span>
-          <strong style="font-family: 'JetBrains Mono', monospace; font-size: 1.05rem;">$ <?= number_format($ventasTarj, 0, ',', '.') ?></strong>
+          <span style="color: var(--text-muted);">Datáfono / Tarjetas:</span>
+          <strong style="font-variant-numeric: tabular-nums;">$ <?= number_format($ventasTarj, 0, ',', '.') ?></strong>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="color: var(--text-muted);">📱 Transferencia / QR:</span>
-          <strong style="font-family: 'JetBrains Mono', monospace; font-size: 1.05rem;">$ <?= number_format($ventasTransf, 0, ',', '.') ?></strong>
+          <span style="color: var(--text-muted);">Transferencia / QR:</span>
+          <strong style="font-variant-numeric: tabular-nums;">$ <?= number_format($ventasTransf, 0, ',', '.') ?></strong>
         </div>
-        <div style="border-top: 1.5px solid var(--border-color); padding-top: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-weight: 800; color: var(--text-main);">Total Facturado:</span>
-          <strong style="font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; color: var(--primary);">$ <?= number_format($ventasEf + $ventasTarj + $ventasTransf, 0, ',', '.') ?></strong>
+        <div style="border-top: 1px solid var(--border-color); padding-top: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 600; color: var(--text-main);">Total Facturado Turno:</span>
+          <strong style="font-variant-numeric: tabular-nums; font-size: 1.1rem; color: var(--text-main);">$ <?= number_format($ventasEf + $ventasTarj + $ventasTransf, 0, ',', '.') ?></strong>
         </div>
       </div>
     </div>
@@ -132,16 +124,16 @@ $saldoEsperado = (float)$sesion['monto_esperado'];
   </div>
 
   <!-- TABLA DE MOVIMIENTOS RECIENTES DE LA SESIÓN -->
-  <div class="card" style="padding: 0; overflow: hidden;">
-    <div class="card-header" style="margin: 0; padding: 1.25rem 1.75rem; background: #f8fafc; display: flex; align-items: center; justify-content: space-between;">
-      <h3 class="card-title">Movimientos Manuales del Turno</h3>
+  <div class="panel" style="padding: 0; overflow: hidden;">
+    <div class="panel-header" style="margin: 0; padding: 1rem 1.25rem; background: var(--bg-muted);">
+      <div class="panel-title">Movimientos Manuales del Turno</div>
       <a href="<?= APP_URL ?>/caja/movimientos" class="btn btn-outline btn-sm">
-        Ver Todo el Historial
+        Ver Historial Completo
       </a>
     </div>
     
     <div class="table-responsive">
-      <table class="table">
+      <table class="table" style="margin: 0; font-size: 0.85rem;">
         <thead>
           <tr>
             <th>Hora</th>
@@ -164,24 +156,24 @@ $saldoEsperado = (float)$sesion['monto_esperado'];
               $isEntrada = ($m['tipo'] === 'ENTRADA');
             ?>
               <tr>
-                <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-muted);">
+                <td style="font-variant-numeric: tabular-nums; color: var(--text-muted);">
                   <?= date('H:i:s', strtotime($m['created_at'])) ?>
                 </td>
                 <td>
                   <span class="badge <?= $isEntrada ? 'badge-success' : 'badge-danger' ?>">
-                    <?= $isEntrada ? '📥 ENTRADA' : '📤 SALIDA' ?>
+                    <?= $isEntrada ? 'Entrada' : 'Salida' ?>
                   </span>
                 </td>
-                <td style="font-weight: 700; color: var(--text-main);">
+                <td style="font-weight: 600; color: var(--text-main);">
                   <?= htmlspecialchars($m['concepto']) ?>
                 </td>
-                <td style="font-size: 0.85rem; color: var(--text-muted);">
+                <td style="color: var(--text-muted);">
                   <?= htmlspecialchars($m['comprobante'] ?? '-') ?>
                 </td>
-                <td style="font-size: 0.85rem; font-weight: 600;">
-                  👤 <?= htmlspecialchars($m['usuario_nombre']) ?>
+                <td>
+                  <?= htmlspecialchars($m['usuario_nombre']) ?>
                 </td>
-                <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 1.05rem; color: <?= $isEntrada ? 'var(--success)' : 'var(--danger)' ?>;">
+                <td style="text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: <?= $isEntrada ? 'var(--success)' : 'var(--danger)' ?>;">
                   <?= $isEntrada ? '+' : '-' ?> $ <?= number_format($m['monto'], 0, ',', '.') ?>
                 </td>
               </tr>
@@ -193,13 +185,13 @@ $saldoEsperado = (float)$sesion['monto_esperado'];
   </div>
 
 <!-- ==============================================================================
-     MODAL: REGISTRAR ENTRADA O SALIDA DE EFECTIVO (MÓDULO 5)
+     MODAL: REGISTRAR ENTRADA O SALIDA DE EFECTIVO
      ============================================================================== -->
 <div class="modal-backdrop" id="modalMovimientoCaja">
-  <div class="modal-dialog" style="max-width: 480px;">
+  <div class="modal-dialog" style="max-width: 460px;">
     <div class="modal-header">
-      <h3 style="font-size: 1.15rem; font-weight: 800;" id="modalMovimientoTitulo">Registrar Movimiento de Efectivo</h3>
-      <button type="button" onclick="closeModal('modalMovimientoCaja')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;">&times;</button>
+      <h3 style="font-size: 1.05rem; font-weight: 600; margin: 0;" id="modalMovimientoTitulo">Registrar Movimiento de Efectivo</h3>
+      <button type="button" onclick="closeModal('modalMovimientoCaja')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">&times;</button>
     </div>
     
     <form id="formMovimientoCaja">
@@ -208,18 +200,18 @@ $saldoEsperado = (float)$sesion['monto_esperado'];
       <div class="modal-body">
         
         <!-- Toggle Tipo -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.25rem;">
-          <button type="button" id="btnToggleEntrada" class="btn btn-success" onclick="seleccionarTipoMovimiento('ENTRADA')">
-            📥 Entrada (Ingreso)
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.25rem;">
+          <button type="button" id="btnToggleEntrada" class="btn btn-primary" onclick="seleccionarTipoMovimiento('ENTRADA')">
+            Entrada (Ingreso)
           </button>
           <button type="button" id="btnToggleSalida" class="btn btn-outline" onclick="seleccionarTipoMovimiento('SALIDA')">
-            📤 Salida (Gasto)
+            Salida (Gasto)
           </button>
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="mov_monto" style="font-weight: 800;">Monto ($) *</label>
-          <input type="number" step="any" min="0.01" id="mov_monto" name="monto" class="form-control form-control-lg" style="font-family: 'JetBrains Mono', monospace; font-weight: 800;" placeholder="ej: 50000" required autofocus>
+          <label class="form-label" for="mov_monto">Monto ($) *</label>
+          <input type="number" step="any" min="0.01" id="mov_monto" name="monto" class="form-control form-control-lg" style="font-weight: 600; font-variant-numeric: tabular-nums;" placeholder="50000" required autofocus>
         </div>
 
         <div class="form-group">
@@ -227,16 +219,16 @@ $saldoEsperado = (float)$sesion['monto_esperado'];
           <input type="text" id="mov_concepto" name="concepto" class="form-control" placeholder="ej: Cambio sencillo, Pago flete, Papelería..." required>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" style="margin-bottom: 0;">
           <label class="form-label" for="mov_comprobante">Nº Recibo / Soporte Físico (Opcional)</label>
           <input type="text" id="mov_comprobante" name="comprobante" class="form-control" placeholder="ej: Recibo #0045, Factura Proveedor">
         </div>
 
       </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline" onclick="closeModal('modalMovimientoCaja')">Cancelar</button>
-        <button type="submit" class="btn btn-primary" id="btnGuardarMovimiento">Guardar Movimiento</button>
+      <div class="modal-footer" style="gap: 0.5rem;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('modalMovimientoCaja')">Cancelar</button>
+        <button type="submit" class="btn btn-primary btn-sm" id="btnGuardarMovimiento">Guardar Movimiento</button>
       </div>
     </form>
   </div>

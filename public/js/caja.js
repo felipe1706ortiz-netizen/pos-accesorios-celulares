@@ -73,12 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (res.success) {
-          showToast(`✅ ${res.message}`, 'success');
+          showToast(res.message, 'success');
           closeModal('modalMovimientoCaja');
           formMov.reset();
           setTimeout(() => window.location.reload(), 800);
         } else {
-          showToast(`⚠️ ${res.message || 'Error al guardar movimiento'}`, 'danger');
+          showToast(res.message || 'Error al guardar movimiento', 'danger');
         }
       } catch (err) {
         showToast('Error de comunicación con el servidor', 'danger');
@@ -125,23 +125,23 @@ function calcularDiferenciaCaja() {
   if (diferencia === 0) {
     displayDif.textContent = '$ 0';
     displayDif.style.color = 'var(--success)';
-    if (displayDifTexto) displayDifTexto.innerHTML = '<span style="color: var(--success); font-weight:700;">🟢 Cuadre Exacto: El dinero físico coincide perfectamente con el sistema.</span>';
+    if (displayDifTexto) displayDifTexto.innerHTML = '<span style="color: var(--success); font-weight:600;">Cuadre Exacto: El dinero físico coincide perfectamente con el sistema.</span>';
     if (box) {
       box.style.borderColor = 'var(--success)';
       box.style.background = '#f0fdf4';
     }
   } else if (diferencia > 0) {
     displayDif.textContent = `+ $ ${formatearMoneda(diferencia)}`;
-    displayDif.style.color = '#0284c7';
-    if (displayDifTexto) displayDifTexto.innerHTML = `<span style="color: #0284c7; font-weight:700;">🔵 Sobrante en Caja: Hay $ ${formatearMoneda(diferencia)} de más respecto al saldo teórico esperado.</span>`;
+    displayDif.style.color = 'var(--primary)';
+    if (displayDifTexto) displayDifTexto.innerHTML = `<span style="color: var(--primary); font-weight:600;">Sobrante en Caja: Hay $ ${formatearMoneda(diferencia)} de más respecto al saldo teórico esperado.</span>`;
     if (box) {
-      box.style.borderColor = '#0284c7';
-      box.style.background = '#f0f9ff';
+      box.style.borderColor = 'var(--primary)';
+      box.style.background = '#f4f4f5';
     }
   } else {
     displayDif.textContent = `- $ ${formatearMoneda(Math.abs(diferencia))}`;
     displayDif.style.color = 'var(--danger)';
-    if (displayDifTexto) displayDifTexto.innerHTML = `<span style="color: var(--danger); font-weight:700;">🔴 Faltante en Caja: Faltan $ ${formatearMoneda(Math.abs(diferencia))} respecto al saldo teórico esperado.</span>`;
+    if (displayDifTexto) displayDifTexto.innerHTML = `<span style="color: var(--danger); font-weight:600;">Faltante en Caja: Faltan $ ${formatearMoneda(Math.abs(diferencia))} respecto al saldo teórico esperado.</span>`;
     if (box) {
       box.style.borderColor = 'var(--danger)';
       box.style.background = '#fef2f2';
@@ -196,18 +196,18 @@ function seleccionarTipoMovimiento(tipo) {
   if (inputTipo) inputTipo.value = tipo;
 
   if (tipo === 'ENTRADA') {
-    if (btnEntrada) { btnEntrada.className = 'btn btn-success'; }
+    if (btnEntrada) { btnEntrada.className = 'btn btn-primary'; }
     if (btnSalida) { btnSalida.className = 'btn btn-outline'; }
     if (titulo) {
-      titulo.textContent = '📥 Registrar Entrada de Efectivo (Ingreso)';
-      titulo.style.color = 'var(--success)';
+      titulo.textContent = 'Registrar Entrada de Efectivo (Ingreso)';
+      titulo.style.color = 'var(--text-main)';
     }
   } else {
     if (btnEntrada) { btnEntrada.className = 'btn btn-outline'; }
-    if (btnSalida) { btnSalida.className = 'btn btn-danger'; }
+    if (btnSalida) { btnSalida.className = 'btn btn-outline'; }
     if (titulo) {
-      titulo.textContent = '📤 Registrar Salida de Efectivo (Gasto/Pago)';
-      titulo.style.color = 'var(--danger)';
+      titulo.textContent = 'Registrar Salida de Efectivo (Gasto/Pago)';
+      titulo.style.color = 'var(--text-main)';
     }
   }
 }

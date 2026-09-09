@@ -82,13 +82,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (res.success) {
-          showToast('✅ ' + res.message, 'success');
+          showToast(res.message, 'success');
           closeModal('modalAjusteRapido');
 
           // Actualizar fila visual en la tabla directamente sin reload
           actualizarFilaVisual(prodId, nuevoStock, nuevoPrecio);
         } else {
-          showToast('⚠️ ' + (res.message || 'Error al guardar ajuste'), 'danger');
+          showToast(res.message || 'Error al guardar ajuste', 'danger');
         }
       } catch (err) {
         showToast('Error de comunicación con el servidor', 'danger');
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (res.success && res.categoria) {
-          showToast('✅ Categoría creada exitosamente', 'success');
+          showToast('Categoría creada exitosamente', 'success');
           closeModal('modalNuevaCategoria');
           formCategoria.reset();
 
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           });
         } else {
-          showToast('⚠️ ' + (res.message || 'Error al crear categoría'), 'warning');
+          showToast(res.message || 'Error al crear categoría', 'warning');
         }
       } catch (err) {
         showToast('Error al procesar categoría', 'danger');

@@ -19,7 +19,6 @@ async function verDetalleFactura(facturaId) {
   tituloEl.textContent = 'Cargando...';
   contenidoEl.innerHTML = `
     <div style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
-      <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
       <div>Consultando detalles de la factura #${facturaId}...</div>
     </div>
   `;
@@ -129,7 +128,7 @@ function reimprimirTicket(facturaId) {
   const iframe = document.getElementById('printIframe');
   if (iframe) {
     iframe.src = `${window.APP_URL}/pos/imprimir/${facturaId}`;
-    showToast(`🖨️ Enviando factura #${facturaId} a impresión...`, 'info', 2000);
+    showToast(`Enviando factura #${facturaId} a impresión...`, 'info', 2000);
   } else {
     window.open(`${window.APP_URL}/pos/imprimir/${facturaId}`, '_blank');
   }

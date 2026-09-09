@@ -19,7 +19,12 @@
   <!-- SIDEBAR DE NAVEGACIÓN -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <div class="sidebar-brand-icon">📱</div>
+      <div class="sidebar-brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+          <line x1="12" y1="18" x2="12.01" y2="18"></line>
+        </svg>
+      </div>
       <div class="sidebar-brand-text">POS ACCESORIOS</div>
     </div>
 
@@ -78,14 +83,28 @@
   <div class="main-wrapper">
     <header class="topbar">
       <div class="topbar-left">
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir Menú">☰</button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir Menú">
+          <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
         <h1 class="page-title"><?= htmlspecialchars($pageTitle ?? 'Panel de Control') ?></h1>
       </div>
       <div class="topbar-right" style="display: flex; align-items: center; gap: 0.6rem;">
-        <button type="button" class="btn btn-outline btn-sm" onclick="abrirModalEstadoGaveta()" title="Ver saldo y estado actual de caja" style="font-weight: 700; display: flex; align-items: center; gap: 0.35rem; color: var(--text-main); border-color: #cbd5e1; background: #fff;">
-          💵 <span>Ver Caja</span>
+        <button type="button" class="btn btn-outline btn-sm" onclick="abrirModalEstadoGaveta()" title="Ver saldo y estado actual de caja" style="display: flex; align-items: center; gap: 0.4rem;">
+          <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <line x1="6" y1="12" x2="18" y2="12"></line>
+            <line x1="12" y1="10" x2="12" y2="14"></line>
+          </svg>
+          <span>Ver Caja</span>
         </button>
-        <span class="badge badge-info" style="margin-left: 0.25rem;">🟢 En Línea</span>
+        <span class="badge badge-success" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 500;">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: #16a34a;"></span>
+          <span>En línea</span>
+        </span>
       </div>
     </header>
 
@@ -106,7 +125,7 @@
 
       <!-- FOOTER GLOBAL PERSISTENTE -->
       <footer class="app-main-footer" style="margin-top: 3rem; padding: 1.75rem 0 1rem 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.84rem; color: var(--text-muted);">
-        Desarrollado por <strong style="color: var(--text-main); font-weight: 700;">Andres Felipe Ortiz Hurtatiz</strong> © <?= date('Y') ?> | Todos los derechos reservados
+        Desarrollado por <strong style="color: var(--text-main); font-weight: 600;">Andres Felipe Ortiz Hurtatiz</strong> &copy; <?= date('Y') ?> | Todos los derechos reservados
       </footer>
     </main>
   </div>
@@ -118,10 +137,15 @@
 <div class="modal-backdrop" id="modalEstadoGaveta">
   <div class="modal-dialog" style="max-width: 500px;">
     <div class="modal-header">
-      <h3 style="font-size: 1.15rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
-        <span>💵</span> <span>Estado de Gaveta (Caja)</span>
+      <h3 style="font-size: 1.05rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <line x1="6" y1="12" x2="18" y2="12"></line>
+          <line x1="12" y1="10" x2="12" y2="14"></line>
+        </svg>
+        <span>Estado de Gaveta (Caja)</span>
       </h3>
-      <button type="button" onclick="closeModal('modalEstadoGaveta')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;">&times;</button>
+      <button type="button" onclick="closeModal('modalEstadoGaveta')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">&times;</button>
     </div>
     
     <div class="modal-body" id="modalEstadoGavetaBody">

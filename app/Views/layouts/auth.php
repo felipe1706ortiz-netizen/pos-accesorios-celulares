@@ -4,104 +4,55 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= htmlspecialchars($title ?? 'Acceso - ' . APP_NAME) ?></title>
-  
   <link rel="stylesheet" href="<?= CSS_URL ?>/style.css">
-  <style>
-    .auth-container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at 10% 20%, #1e1b4b 0%, #0b0f19 90%);
-      padding: 2rem 1.5rem 1.5rem 1.5rem;
-      position: relative;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-    .auth-container::before {
-      content: '';
-      position: absolute;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
-      top: -100px;
-      left: -100px;
-      pointer-events: none;
-    }
-    .auth-container::after {
-      content: '';
-      position: absolute;
-      width: 450px;
-      height: 450px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
-      bottom: -100px;
-      right: -100px;
-      pointer-events: none;
-    }
-    .auth-card {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      width: 100%;
-      max-width: 460px;
-      border-radius: var(--radius-xl);
-      padding: 2.75rem 2.5rem;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      position: relative;
-      z-index: 10;
-      margin-bottom: 2rem;
-    }
-    .auth-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .auth-logo {
-      width: 64px;
-      height: 64px;
-      border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, #6366f1 0%, #3b82f6 50%, #10b981 100%);
-      color: #fff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
-    }
-    .auth-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
-    }
-    .auth-subtitle {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-top: 0.35rem;
-    }
-    .auth-footer {
-      position: relative;
-      z-index: 10;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 0.82rem;
-      text-align: center;
-      line-height: 1.6;
-    }
-    .auth-footer strong {
-      color: rgba(255, 255, 255, 0.9);
-      font-weight: 700;
-    }
-  </style>
 </head>
-<body>
-  <div class="auth-container">
-    <?= $content ?? '' ?>
-    
-    <footer class="auth-footer">
-      Desarrollado por <strong>Andres Felipe Ortiz Hurtatiz</strong> © <?= date('Y') ?> | Todos los derechos reservados
-    </footer>
+<body class="auth-body">
+  <div class="auth-split">
+    <!-- COLUMNA IZQUIERDA: BRANDING & RESUMEN CORPORATIVO -->
+    <aside class="auth-split-aside">
+      <div class="auth-aside-content">
+        <div class="auth-brand">
+          <div class="auth-brand-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
+          </div>
+          <span class="auth-brand-name">POS ACCESORIOS</span>
+        </div>
+
+        <div class="auth-aside-hero">
+          <h2 class="auth-hero-title">Sistema de Gestión & Punto de Venta</h2>
+          <p class="auth-hero-desc">Control integral de inventario, facturación ágil en mostrador, arqueos de caja y seguimiento de pedidos para tiendas de telefonía y accesorios.</p>
+
+          <div class="auth-features-list">
+            <div class="auth-feature-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Facturación rápida con lector de código de barras y atajos</span>
+            </div>
+            <div class="auth-feature-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Control de turnos de caja, gaveta de dinero y balance</span>
+            </div>
+            <div class="auth-feature-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Seguimiento de encargos y abonos con comprobantes térmicos</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-aside-footer">
+          Desarrollado por <strong>Andres Felipe Ortiz Hurtatiz</strong> &copy; <?= date('Y') ?> | Todos los derechos reservados
+        </div>
+      </div>
+    </aside>
+
+    <!-- COLUMNA DERECHA: FORMULARIO DIRECTO SIN TARJETA -->
+    <main class="auth-split-main">
+      <div class="auth-form-container">
+        <?= $content ?? '' ?>
+      </div>
+    </main>
   </div>
 </body>
 </html>

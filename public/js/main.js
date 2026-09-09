@@ -43,15 +43,15 @@ function showToast(message, type = 'info', duration = 3500) {
   }
 
   const icons = {
-    success: '✅',
-    danger: '❌',
-    warning: '⚠️',
-    info: 'ℹ️'
+    success: '<svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>',
+    danger: '<svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>',
+    warning: '<svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>',
+    info: '<svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
   };
 
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
-  toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span> <span>${message}</span>`;
+  toast.innerHTML = `<span style="display:inline-flex;align-items:center;">${icons[type] || icons.info}</span> <span>${message}</span>`;
   
   container.appendChild(toast);
 
@@ -139,7 +139,7 @@ function dispararAperturaGaveta() {
     document.body.appendChild(iframe);
   }
   iframe.src = `${window.APP_URL}/caja/pulso-gaveta`;
-  showToast('🔓 Pulso enviado al cajón monedero / gaveta', 'success');
+  showToast('Pulso enviado al cajón monedero / gaveta', 'success');
 }
 
 /**
@@ -152,7 +152,6 @@ async function abrirModalEstadoGaveta() {
 
   body.innerHTML = `
     <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
-      <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
       Consultando saldo de la gaveta...
     </div>
   `;
@@ -161,7 +160,7 @@ async function abrirModalEstadoGaveta() {
     const res = await fetchAPI(`${window.APP_URL}/caja/estado-ajax`);
     if (res.success) {
       body.innerHTML = `
-        <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1rem; font-size: 0.85rem;">
+        <div style="background: #f4f4f5; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1rem; font-size: 0.85rem;">
           <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
             <span>Turno activo: <strong>#${res.sesion_id}</strong></span>
             <span>Cajero: <strong>${res.usuario_nombre}</strong></span>
@@ -173,31 +172,31 @@ async function abrirModalEstadoGaveta() {
 
         <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.92rem; margin-bottom: 1rem;">
           <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">🏦 Fondo Inicial:</span>
-            <strong style="font-family: 'JetBrains Mono', monospace;">$ ${formatearMoneda(res.monto_inicial)}</strong>
+            <span style="color: var(--text-muted);">Fondo Inicial:</span>
+            <strong style="font-variant-numeric: tabular-nums;">$ ${formatearMoneda(res.monto_inicial)}</strong>
           </div>
           <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">💵 (+) Ventas Efectivo:</span>
-            <strong style="font-family: 'JetBrains Mono', monospace; color: var(--success);">+ $ ${formatearMoneda(res.ventas_efectivo)}</strong>
+            <span style="color: var(--text-muted);">(+) Ventas Efectivo:</span>
+            <strong style="font-variant-numeric: tabular-nums; color: var(--success);">+ $ ${formatearMoneda(res.ventas_efectivo)}</strong>
           </div>
           <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">📥 (+) Entradas Manuales:</span>
-            <strong style="font-family: 'JetBrains Mono', monospace; color: var(--success);">+ $ ${formatearMoneda(res.entradas)}</strong>
+            <span style="color: var(--text-muted);">(+) Entradas Manuales:</span>
+            <strong style="font-variant-numeric: tabular-nums; color: var(--success);">+ $ ${formatearMoneda(res.entradas)}</strong>
           </div>
           <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted);">📤 (-) Salidas / Gastos:</span>
-            <strong style="font-family: 'JetBrains Mono', monospace; color: var(--danger);">- $ ${formatearMoneda(res.salidas)}</strong>
+            <span style="color: var(--text-muted);">(-) Salidas / Gastos:</span>
+            <strong style="font-variant-numeric: tabular-nums; color: var(--danger);">- $ ${formatearMoneda(res.salidas)}</strong>
           </div>
         </div>
 
-        <div style="background: linear-gradient(135deg, #1e1b4b, #0f172a); color: #ffffff; border-radius: var(--radius-md); padding: 1.25rem; text-align: center;">
-          <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em;">
+        <div style="background: #18181b; color: #ffffff; border: 1px solid #27272a; border-radius: var(--radius-sm); padding: 1.25rem; text-align: center;">
+          <div style="font-size: 0.78rem; font-weight: 500; text-transform: uppercase; color: #a1a1aa; letter-spacing: 0.05em;">
             Efectivo Total Estimado en Gaveta
           </div>
-          <div style="font-size: 2rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: #10b981; margin: 0.35rem 0;">
+          <div style="font-size: 1.85rem; font-weight: 700; font-variant-numeric: tabular-nums; color: #ffffff; margin: 0.35rem 0;">
             $ ${formatearMoneda(res.monto_esperado)}
           </div>
-          <div style="font-size: 0.78rem; color: #cbd5e1;">
+          <div style="font-size: 0.78rem; color: #71717a;">
             Ventas electrónicas adicionales (Tarjeta/QR): $ ${formatearMoneda(res.ventas_tarjeta + res.ventas_transfer)}
           </div>
         </div>
@@ -205,16 +204,15 @@ async function abrirModalEstadoGaveta() {
     } else {
       body.innerHTML = `
         <div style="text-align: center; padding: 2rem; color: var(--danger);">
-          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
-          <p style="font-weight: 700;">${res.message || 'No hay ninguna sesión de caja abierta.'}</p>
-          <a href="${window.APP_URL}/caja/apertura" class="btn btn-primary" style="margin-top: 1rem;">🔓 Abrir Turno de Caja</a>
+          <p style="font-weight: 600;">${res.message || 'No hay ninguna sesión de caja abierta.'}</p>
+          <a href="${window.APP_URL}/caja/apertura" class="btn btn-primary" style="margin-top: 1rem;">Abrir Turno de Caja</a>
         </div>
       `;
     }
   } catch (err) {
     body.innerHTML = `
       <div style="text-align: center; padding: 2rem; color: var(--danger);">
-        ⚠️ Error al obtener el estado de la gaveta.
+        Error al obtener el estado de la gaveta.
       </div>
     `;
   }

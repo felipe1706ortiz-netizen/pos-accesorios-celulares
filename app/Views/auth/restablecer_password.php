@@ -1,121 +1,124 @@
 <!-- ==============================================================================
-     VISTA: RESTABLECER CONTRASEÑA (UI/UX PRO MAX)
+     VISTA: RESTABLECER CONTRASEÑA (Sober SaaS)
      ============================================================================== -->
 
-<div class="auth-card" style="max-width: 480px;">
-  <div class="auth-header">
-    <div class="auth-logo" style="background: linear-gradient(135deg, #4f46e5 0%, #2563eb 50%, #06b6d4 100%);">
-      🔒
-    </div>
-    <h2 class="auth-title">Nueva Contraseña</h2>
-    <p class="auth-subtitle">Ingresa tu nueva clave de acceso para continuar</p>
+<div class="auth-header">
+  <h1 class="auth-title">Nueva Contraseña</h1>
+  <p class="auth-subtitle">Ingresa tu nueva clave de acceso para continuar</p>
+</div>
+
+<?php if (!empty($error)): ?>
+  <div class="alert alert-danger" style="margin-bottom: 1.5rem;">
+    <svg style="width: 16px; height: 16px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <div><?= htmlspecialchars($error) ?></div>
+  </div>
+<?php endif; ?>
+
+<?php if (($status ?? '') === 'invalid' || ($status ?? '') === 'expired'): ?>
+  <div class="alert alert-danger" style="display: block; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem;">
+    <h3 style="font-size: 1.05rem; font-weight: 600; margin: 0 0 0.5rem 0; color: #991b1b;">
+      <?= ($status === 'expired') ? 'Enlace Expirado' : 'Enlace No Válido' ?>
+    </h3>
+    <p style="font-size: 0.88rem; color: #b91c1c; line-height: 1.5; margin: 0 0 1.25rem 0;">
+      <?= htmlspecialchars($message ?? 'Este enlace de restablecimiento ha expirado o ya fue utilizado.') ?>
+    </p>
+    <a href="<?= APP_URL ?>/recuperar-password" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem; text-decoration: none;">
+      Solicitar Nuevo Enlace
+    </a>
   </div>
 
-  <?php if (!empty($error)): ?>
-    <div class="toast toast-danger" style="margin-bottom: 1.5rem; background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; animation: none;">
-      ⚠️ <?= htmlspecialchars($error) ?>
-    </div>
-  <?php endif; ?>
+  <div style="text-align: center; margin-top: 1rem;">
+    <a href="<?= APP_URL ?>/login" class="btn btn-outline" style="width: 100%;">
+      Volver al Login
+    </a>
+  </div>
 
-  <?php if (($status ?? '') === 'invalid' || ($status ?? '') === 'expired'): ?>
-    <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
-      <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">⚠️</div>
-      <h3 style="font-size: 1.15rem; font-weight: 800; color: #991b1b; margin: 0 0 0.5rem 0;">
-        <?= ($status === 'expired') ? 'Enlace Expirado' : 'Enlace No Válido' ?>
-      </h3>
-      <p style="font-size: 0.92rem; color: #b91c1c; line-height: 1.5; margin: 0 0 1rem 0;">
-        <?= htmlspecialchars($message ?? 'Este enlace de restablecimiento ha expirado o ya fue utilizado.') ?>
-      </p>
-      <a href="<?= APP_URL ?>/recuperar-password" class="btn btn-primary btn-sm" style="font-weight: 700; text-decoration: none;">
-        Solicitar Nuevo Enlace ✉️
-      </a>
-    </div>
+<?php elseif (($status ?? '') === 'success'): ?>
+  <div class="alert alert-success" style="display: block; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem;">
+    <h3 style="font-size: 1.05rem; font-weight: 600; margin: 0 0 0.5rem 0; color: #166534;">¡Contraseña Actualizada!</h3>
+    <p style="font-size: 0.88rem; color: #15803d; line-height: 1.5; margin: 0 0 1.25rem 0;">
+      <?= htmlspecialchars($message ?? 'Tu contraseña ha sido restablecida exitosamente.') ?>
+    </p>
+    <a href="<?= APP_URL ?>/login" class="btn btn-primary" style="width: 100%; height: 42px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+      Iniciar Sesión
+    </a>
+  </div>
 
-    <div style="text-align: center; margin-top: 1rem;">
-      <a href="<?= APP_URL ?>/login" class="btn btn-outline btn-block" style="width: 100%; font-weight: 700;">
-        Volver al Login
-      </a>
-    </div>
+<?php else: ?>
 
-  <?php elseif (($status ?? '') === 'success'): ?>
-    <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
-      <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">✅</div>
-      <h3 style="font-size: 1.15rem; font-weight: 800; color: #166534; margin: 0 0 0.5rem 0;">¡Contraseña Actualizada!</h3>
-      <p style="font-size: 0.92rem; color: #15803d; line-height: 1.5; margin: 0 0 1rem 0;">
-        <?= htmlspecialchars($message ?? 'Tu contraseña ha sido restablecida exitosamente.') ?>
-      </p>
-      <a href="<?= APP_URL ?>/login" class="btn btn-primary btn-block" style="width: 100%; font-weight: 800; padding: 0.85rem; text-decoration: none;">
-        Iniciar Sesión Ahora ➔
-      </a>
-    </div>
+  <form action="<?= APP_URL ?>/restablecer-password" method="POST" autocomplete="off">
+    <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+    <input type="hidden" name="token" value="<?= htmlspecialchars($token ?? '') ?>">
 
-  <?php else: ?>
-
-    <form action="<?= APP_URL ?>/restablecer-password" method="POST" autocomplete="off">
-      <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
-      <input type="hidden" name="token" value="<?= htmlspecialchars($token ?? '') ?>">
-
-      <div class="form-group" style="margin-bottom: 1.25rem;">
-        <label for="password" class="form-label" style="font-weight: 700;">Nueva Contraseña</label>
-        <div style="position: relative; display: flex; align-items: center;">
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            class="form-control form-control-lg" 
-            placeholder="Mínimo 6 caracteres" 
-            required 
-            autofocus
-            style="padding-right: 2.75rem;"
-          >
-          <button 
-            type="button" 
-            onclick="togglePasswordVisibility('password', this)" 
-            title="Mostrar / Ocultar"
-            style="position: absolute; right: 0.75rem; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; padding: 0.25rem; display: flex; align-items: center; justify-content: center; outline: none;"
-          >
-            👁️
-          </button>
-        </div>
+    <div class="form-group" style="margin-bottom: 1.25rem;">
+      <label for="password" class="form-label">Nueva Contraseña</label>
+      <div style="position: relative; display: flex; align-items: center;">
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          class="form-control" 
+          placeholder="Mínimo 6 caracteres" 
+          required 
+          autofocus
+          style="padding-right: 2.75rem;"
+        >
+        <button 
+          type="button" 
+          onclick="togglePasswordVisibility('password', this)" 
+          title="Mostrar / Ocultar"
+          style="position: absolute; right: 0.75rem; background: none; border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; outline: none; padding: 0.25rem;"
+        >
+          <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
       </div>
-
-      <div class="form-group" style="margin-bottom: 1.5rem;">
-        <label for="password_confirm" class="form-label" style="font-weight: 700;">Confirmar Nueva Contraseña</label>
-        <div style="position: relative; display: flex; align-items: center;">
-          <input 
-            type="password" 
-            id="password_confirm" 
-            name="password_confirm" 
-            class="form-control form-control-lg" 
-            placeholder="Repite la nueva contraseña" 
-            required
-            style="padding-right: 2.75rem;"
-          >
-          <button 
-            type="button" 
-            onclick="togglePasswordVisibility('password_confirm', this)" 
-            title="Mostrar / Ocultar"
-            style="position: absolute; right: 0.75rem; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; padding: 0.25rem; display: flex; align-items: center; justify-content: center; outline: none;"
-          >
-            👁️
-          </button>
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-primary btn-lg btn-block" style="width: 100%; font-weight: 800; padding: 0.85rem;">
-        <span>Guardar Nueva Contraseña</span>
-        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-      </button>
-    </form>
-
-    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
-      <a href="<?= APP_URL ?>/login" style="color: var(--text-muted); text-decoration: none; font-weight: 600;">
-        ← Volver al Inicio de Sesión
-      </a>
     </div>
 
-  <?php endif; ?>
-</div>
+    <div class="form-group" style="margin-bottom: 1.5rem;">
+      <label for="password_confirm" class="form-label">Confirmar Nueva Contraseña</label>
+      <div style="position: relative; display: flex; align-items: center;">
+        <input 
+          type="password" 
+          id="password_confirm" 
+          name="password_confirm" 
+          class="form-control" 
+          placeholder="Repite la nueva contraseña" 
+          required
+          style="padding-right: 2.75rem;"
+        >
+        <button 
+          type="button" 
+          onclick="togglePasswordVisibility('password_confirm', this)" 
+          title="Mostrar / Ocultar"
+          style="position: absolute; right: 0.75rem; background: none; border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; outline: none; padding: 0.25rem;"
+        >
+          <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%; height: 42px; font-weight: 600;">
+      <span>Guardar Nueva Contraseña</span>
+    </button>
+  </form>
+
+  <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem;">
+    <a href="<?= APP_URL ?>/login" style="color: var(--text-muted); text-decoration: none; font-weight: 500;">
+      &larr; Volver al Inicio de Sesión
+    </a>
+  </div>
+
+<?php endif; ?>
 
 <script>
 function togglePasswordVisibility(inputId, btn) {
@@ -123,12 +126,10 @@ function togglePasswordVisibility(inputId, btn) {
   if (!input) return;
   if (input.type === 'password') {
     input.type = 'text';
-    btn.textContent = '🙈';
-    btn.title = 'Ocultar Contraseña';
+    btn.innerHTML = `<svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
   } else {
     input.type = 'password';
-    btn.textContent = '👁️';
-    btn.title = 'Mostrar Contraseña';
+    btn.innerHTML = `<svg style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
   }
 }
 </script>
